@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Severin Meyer">
+	<link rel="stylesheet" href="style.css">
+	<title>Humble Type Instruction Compiler</title>
+</head>
+<body>
+
+<header>
+	<h1>Humble Type Instruction Compiler</h1>
+	<nav>
+		<ul>
+		<li><a href="index.html">Introduction</a>
+		<li><a href="instructions.html">Instructions</a>
+		<li><a href="blocks.html">Blocks</a>
+		<li><a href="example.html" id="current">Example</a>
+		<li><a href="grammar.html">Grammar</a>
+		<li><a href="usage.html">Usage</a>
+		</ul>
+	</nav>
+</header>
+
+<main>
+	<h2>Example</h2>
+
+<div>
+	<svg width="296" height="248" font-size="16px" font-family="monospace" shape-rendering="crispEdges">
+		<defs>
+			<marker id="m" overflow="visible">
+				<rect x="-1.5" y="-1.5" width="3" height="3"/>
+			</marker>
+		</defs>
+		<path d="m64 216h48v-76h72v76h48v-184h-48v72h-72v-72h-48z" fill-opacity=".25" stroke-width="2" marker-start="url(#m)" marker-mid="url(#m)"/>
+		<g text-anchor="end">
+			<text x="58" y="220">0</text>
+			<text x="58" y="36">1</text>
+			<text x="178" y="36">5</text>
+			<text x="178" y="96">4</text>
+			<text x="178" y="220">8</text>
+			<text x="178" y="160">9</text>
+		</g>
+		<text x="118" y="36">2</text>
+		<text x="118" y="96">3</text>
+		<text x="238" y="36">6</text>
+		<text x="238" y="220">7</text>
+		<text x="118" y="220">11</text>
+		<text x="118" y="160">10</text>
+	</svg>
+
+	<table class="code">
+		<tr>
+		<td class="in"><pre><code>cvt
+{
+   80 side
+  160 stem
+  120 bar
+  700 cap
+}
+
+flags
+{
+  x    1
+  y    0
+  rnd  1
+  rp2  0
+  side 01110
+  stem 01101
+  body 10100
+}
+
+<strong>H
+{</strong>
+  MIAP+rnd   0 side
+  MIRP+stem  2 stem
+  SHP+rp2   10
+  MDRP+body  6
+  MIRP+stem  8 stem
+  SHP+rp2    4
+  MIRP+side 13 side
+  IUP+x
+
+  SVTCA+y
+  MDAP+rnd   0
+  ALIGNRP    8
+  MIAP+rnd   6 cap
+  ALIGNRP    2
+  SRP2       0
+  IP         4
+  MDAP+rnd   4
+  MIRP+stem 10 bar
+  IUP+y
+<strong>}</strong></code></pre></td>
+		<td class="to">▶</td>
+		<td class="out"><pre><samp>NPUSHB
+ 21
+ 10
+ 2
+ 4
+ 4
+ 0
+ 2
+ 6
+ 3
+ 8
+ 0
+ 13
+ 0
+ 4
+ 8
+ 1
+ 6
+ 10
+ 2
+ 1
+ 0
+ 0
+MIAP[1]
+MIRP[1101]
+SHP[0]
+MDRP[10100]
+MIRP[1101]
+SHP[0]
+MIRP[1110]
+IUP[1]
+SVTCA[0]
+MDAP[1]
+ALIGNRP
+MIAP[1]
+ALIGNRP
+SRP2
+IP
+MDAP[1]
+MIRP[1101]
+IUP[0]</samp></pre></td>
+	</tr>
+	</table>
+</div>
+</main>
+
+<footer>
+	This documentation by
+	<a target="_blank" href="http://gitlab.com/u/sev">Severin Meyer</a>
+	is licensed under the
+	<a target="_blank" href="http://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+</footer>
+
+</body>
+</html>
