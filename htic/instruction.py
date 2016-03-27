@@ -364,7 +364,8 @@ class LoopInstruction(Instruction):
 
 
 	def canMerge(self, other):
-		return other.name == self.name and other.flag == self.flag
+		return other.name == self.name and other.flag == self.flag and \
+			self.arguments and other.arguments
 
 
 	def merge(self, other):
@@ -390,5 +391,5 @@ class LoopInstruction(Instruction):
 		block.last.write(accumulator)
 
 		args = len(self.arguments)
-		for _ in range(args if args < self.LIMIT else 1):
+		for _ in range(args if args and args < self.LIMIT else 1):
 			Instruction._writeName(self, accumulator)
