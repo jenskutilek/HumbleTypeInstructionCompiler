@@ -89,14 +89,14 @@ class Data(object):
 		self.__flagLookup[name] = value
 
 
-	def getCvt(self, name):
+	def getCvtIndex(self, name):
 		try:
 			return self.__cvtLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared CVT identifier: {}".format(name))
 
 
-	def getFunction(self, name):
+	def getFunctionIndex(self, name):
 		try:
 			return self.__functionLookup[name]
 		except KeyError:
@@ -107,14 +107,14 @@ class Data(object):
 		return name in self.__voidFunctionList
 
 
-	def getStorage(self, name):
+	def getStorageIndex(self, name):
 		try:
 			return self.__storageLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared storage identifier: {}".format(name))
 
 
-	def getFlag(self, name):
+	def getFlagValue(self, name):
 		try:
 			return self.__flagLookup[name]
 		except KeyError:

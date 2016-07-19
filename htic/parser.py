@@ -172,16 +172,16 @@ class Parser(object):
 			for item in instruction.recipe:
 				if item == 'CVT':
 					name = self.__id()
-					index = self.data.getCvt(name)
+					index = self.data.getCvtIndex(name)
 					instruction.add(IntegerArgument(index))
 				elif item == 'WS':
 					name = self.__id()
 					self.data.addStorage(name)
-					index = self.data.getStorage(name)
+					index = self.data.getStorageIndex(name)
 					instruction.add(IntegerArgument(index))
 				elif item == 'RS':
 					name = self.__id()
-					index = self.data.getStorage(name)
+					index = self.data.getStorageIndex(name)
 					instruction.add(IntegerArgument(index))
 				elif item == 'FDEF':
 					name = self.__id()
@@ -189,11 +189,11 @@ class Parser(object):
 						self.data.addVoidFunction(name)
 					else:
 						self.data.addFunction(name)
-					index = self.data.getFunction(name)
+					index = self.data.getFunctionIndex(name)
 					instruction.add(IntegerArgument(index))
 				elif item == 'CALL':
 					name = self.__id()
-					index = self.data.getFunction(name)
+					index = self.data.getFunctionIndex(name)
 					instruction.add(IntegerArgument(index))
 					if self.data.isVoidFunction(name):
 						instruction.mightPush = False
@@ -237,7 +237,7 @@ class Parser(object):
 		except HumbleError:
 			self.tokenizer.rewind()
 			name = self.__id()
-			return self.data.getFlag(name)
+			return self.data.getFlagValue(name)
 		finally:
 			self.tokenizer.unmark()
 
