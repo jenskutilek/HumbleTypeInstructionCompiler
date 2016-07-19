@@ -46,7 +46,7 @@ class ParserError(unittest.TestCase):
 
 	def testInvalidNumF2d14Token(self):
 		with self.assertRaises(HumbleError):
-			helper.toBytes("push 0..A")
+			helper.toBytes("push 0:A")
 
 	def testInvalidNumIntLow(self):
 		with self.assertRaises(HumbleError):

@@ -108,7 +108,7 @@ class ConversionTest(unittest.TestCase):
 		self.assertEqual(code, ConversionTest.EXPECTED)
 
 	def testF2d14(self):
-		code = helper.toBytes("push 0..0 0..015563965 +0..00390625 -0..00390625 1..999938965 -2..0 -0..000061035")
+		code = helper.toBytes("push 0:0 0:015563965 +0:00390625 -0:00390625 1:999938965 -2:0 -0:000061035")
 		self.assertEqual(code, ConversionTest.EXPECTED)
 
 	def testHex(self):

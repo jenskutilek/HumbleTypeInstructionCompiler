@@ -298,8 +298,8 @@ class Parser(object):
 				value = int(token, 0)
 				if value >= 2**15 and value < 2**16:
 					value -= 2**16
-			elif token.find("..") >= 0:
-				value = int(round(float(token.replace("..", ".")) * 2**14))
+			elif token.find(":") >= 0:
+				value = int(round(float(token.replace(":", ".")) * 2**14))
 			elif token.find(".") >= 0:
 				value = int(round(float(token) * 2**6))
 			else:
