@@ -165,8 +165,8 @@ class Parser(object):
 
 
 	def __instr(self):
-		name = self.tokenizer.get()
-		instruction = Instruction.newInstruction(name)
+		instr = self.tokenizer.get()
+		instruction = Instruction.newInstruction(instr)
 		instruction.setFlag(self.__flag())
 		if self.tokenizer.peek() != "\n":
 			for item in instruction.recipe:
@@ -185,13 +185,18 @@ class Parser(object):
 					instruction.add(IntegerArgument(index))
 				elif item == 'FDEF':
 					name = self.__id()
-					self.data.addFunction(name)
+					if instr == "void":
+						self.data.addVoidFunction(name)
+					else:
+						self.data.addFunction(name)
 					index = self.data.getFunction(name)
 					instruction.add(IntegerArgument(index))
 				elif item == 'CALL':
 					name = self.__id()
 					index = self.data.getFunction(name)
 					instruction.add(IntegerArgument(index))
+					if self.data.isVoidFunction(name):
+						instruction.mightPush = False
 				elif item == 'VAL':
 					value = self.__val()
 					instruction.add(value)

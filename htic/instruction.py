@@ -119,6 +119,7 @@ class Instruction(object):
 		elif name == "SZP2":      return Instruction(name, 0x15, 0, ('VAL',), False)
 		elif name == "SZPS":      return Instruction(name, 0x16, 0, ('VAL',), False)
 		elif name == "UTP":       return Instruction(name, 0x29, 0, ('VAL',), False)
+		elif name == "void":      return BlockInstruction("FDEF", 0x2C, 0, ('FDEF',), False, ("ENDF",))
 		elif name == "WCVTF":     return Instruction(name, 0x70, 0, ('CVT', 'VAL'), False)
 		elif name == "WCVTP":     return Instruction(name, 0x44, 0, ('CVT', 'VAL'), False)
 		elif name == "WS":        return Instruction(name, 0x42, 0, ('WS', 'VAL'), False)

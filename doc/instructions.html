@@ -195,6 +195,24 @@
 	</table>
 </div>
 
+<div id="void">
+	<h3>Void functions</h3>
+	<p>
+		Because functions can potentially push values onto the stack,
+		the compiler normally does not consolidate push instruction accross <code>CALL</code> instructions.
+		However, if a function does not push more values than it consumes, it can
+		be declared with the <code>void</code> instruction instead of <code>FDEF</code>,
+		to enable a more aggressive optimization.
+	</p>
+	<table class="code">
+		<tr>
+		<td class="in"><pre><code><strong>void</strong> qux</code></pre></td>
+		<td class="to">&nbsp;</td>
+		<td class="out">&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
 <div id="delta">
 	<h3>Delta Instructions</h3>
 	<p>

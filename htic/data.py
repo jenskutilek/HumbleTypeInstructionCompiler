@@ -32,6 +32,7 @@ class Data(object):
 
 		self.__cvtLookup = {}
 		self.__functionLookup = {}
+		self.__voidFunctionList = []
 		self.__storageLookup = {}
 		self.__flagLookup = {}
 
@@ -73,6 +74,11 @@ class Data(object):
 			raise HumbleError("Duplicate function identifier: {}".format(name))
 
 
+	def addVoidFunction(self, name):
+		self.addFunction(name)
+		self.__voidFunctionList.append(name)
+
+
 	def addStorage(self, name):
 		if name not in self.__storageLookup:
 			index = len(self.__storageLookup)
@@ -95,6 +101,10 @@ class Data(object):
 			return self.__functionLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared function identifier: {}".format(name))
+
+
+	def isVoidFunction(self, name):
+		return name in self.__voidFunctionList
 
 
 	def getStorage(self, name):
