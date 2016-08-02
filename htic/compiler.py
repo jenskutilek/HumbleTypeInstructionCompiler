@@ -77,7 +77,11 @@ def toFontforge(sourceFile, font):
 		font.setTableData("prep", translator.translate(data.prep))
 
 	for name, block in data.glyphs.items():
-		font[str(name)].ttinstrs = translator.translate(block)
+		try:
+			font[str(name)].ttinstrs = translator.translate(block)
+		except Exception:
+			print("Error with glyph: " + name)
+			raise
 
 
 
