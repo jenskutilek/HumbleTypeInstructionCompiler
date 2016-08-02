@@ -8,8 +8,6 @@ class Data(object):
 
 	def __init__(self):
 
-		# Public
-
 		self.gasp = []
 		"""[(int size, bool doGridfit, bool doGray)]"""
 
@@ -28,10 +26,9 @@ class Data(object):
 		self.glyphs = {}
 		"""{string name : Block block}"""
 
-		# Private
-
 		self.__cvtLookup = {}
 		self.__functionLookup = {}
+		self.__functionRecipeLookup = {}
 		self.__voidFunctionList = []
 		self.__storageLookup = {}
 		self.__flagLookup = {}
@@ -58,25 +55,22 @@ class Data(object):
 
 
 	def addCvt(self, name, value):
-		if name not in self.__cvtLookup:
-			index = len(self.cvt)
-			self.cvt.append(value)
-			self.__cvtLookup[name] = index
-		else:
+		if name in self.__cvtLookup:
 			raise HumbleError("Duplicate CVT identifier: {}".format(name))
+		index = len(self.cvt)
+		self.cvt.append(value)
+		self.__cvtLookup[name] = index
 
 
-	def addFunction(self, name):
-		if name not in self.__functionLookup:
-			index = len(self.__functionLookup)
-			self.__functionLookup[name] = index
-		else:
+	def addFunction(self, index, name, recipe, isVoid):
+		if name in self.__functionLookup:
 			raise HumbleError("Duplicate function identifier: {}".format(name))
-
-
-	def addVoidFunction(self, name):
-		self.addFunction(name)
-		self.__voidFunctionList.append(name)
+		if index in self.__functionLookup.values():
+			raise HumbleError("Duplicate function index: {} {}".format(index, name))
+		self.__functionLookup[name] = index
+		self.__functionRecipeLookup[name] = recipe
+		if isVoid:
+			self.__voidFunctionList.append(name)
 
 
 	def addStorage(self, name):
@@ -101,6 +95,13 @@ class Data(object):
 			return self.__functionLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared function identifier: {}".format(name))
+
+
+	def getFunctionRecipe(self, name):
+		try:
+			return self.__functionRecipeLookup[name]
+		except KeyError:
+			return ()
 
 
 	def isVoidFunction(self, name):

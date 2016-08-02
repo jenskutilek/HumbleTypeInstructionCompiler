@@ -159,6 +159,28 @@
 	</table>
 </div>
 
+<div id="functions">
+	<h3>Function Definitions</h3>
+	<p>
+		The <code>FDEF</code> instruction is more verbose.
+		Its first argument is the function index, followed by the function identifier.
+		Then follows a list of expected parameters, which are used to parse
+		the arguments of the corresponding <code>CALL</code> instructions.
+		A parameter must begin with
+		<code>val</code>, <code>pt</code>, <code>cvt</code>, <code>func</code>, or <code>stor</code>
+		to declare its type, which is either a numerical value,
+		point number, control value identifier, function identifier, or storage identifier respectively.
+		Additional characters can be appended to a parameter name.
+	</p>
+	<table class="code">
+		<tr>
+		<td class="in"><pre><code>FDEF <strong>9 interpolate pt pt1 pt2</strong><br>  SRP2<br>  SRP1<br>  DUP<br>  IP<br>  MDAP[rnd]<br>ENDF</code></pre></td>
+		<td class="to">▶</td>
+		<td class="out"><pre><samp>PUSHB[000]<br>  <strong>9</strong><br>FDEF<br>  SRP2<br>  SRP1<br>  DUP<br>  IP<br>  MDAP[rnd]<br>ENDF<br></samp></pre></td>
+		</tr>
+	</table>
+</div>
+
 <div id="stack">
 	<h3>Stack Management</h3>
 	<p>
@@ -173,22 +195,22 @@
 	</p>
 	<table class="code">
 		<tr>
-		<td class="in"><pre><code>FDEF qux<br>  DUP<br>  <strong>push 1</strong><br>  ADD<br>  ALIGNPTS<br>ENDF</code></pre></td>
+		<td class="in"><pre><code>FDEF 31 align pt<br>  DUP<br>  <strong>push 1</strong><br>  ADD<br>  ALIGNPTS<br>ENDF</code></pre></td>
 		<td class="to">▶</td>
 		<td class="out"><pre><samp>PUSHB[000]<br> 31<br>FDEF<br>DUP<br><strong>PUSHB[000]<br> 1</strong><br>ADD<br>ALIGNPTS<br>ENDF</samp></pre></td>
 		</tr>
 	</table>
 </div>
 
-<div id="functions">
-	<h3>Function Arguments</h3>
+<div id="calls">
+	<h3>Function Calls</h3>
 	<p>
-		Function arguments can be listed after the
-		<code>CALL</code> or <code>LOOPCALL</code> instruction arguments.
+		Function calls are slightly rearranged.
+		The possible loop count and identifier of the function are listed first, followed by the arguments.
 	</p>
 	<table class="code">
 		<tr>
-		<td class="in"><pre><code>CALL qux <strong>8</strong><br>LOOPCALL 2 qux <strong>8 6</strong></code></pre></td>
+		<td class="in"><pre><code>CALL align <strong>8</strong><br>LOOPCALL 2 align <strong>8 6</strong></code></pre></td>
 		<td class="to">▶</td>
 		<td class="out"><pre><samp>PUSHB[001]<br> <strong>8</strong><br> 31<br>CALL<br>PUSHB[011]<br> <strong>8<br> 6</strong><br> 2<br> 31<br>LOOPCALL</samp></pre></td>
 		</tr>
@@ -196,7 +218,7 @@
 </div>
 
 <div id="void">
-	<h3>Void functions</h3>
+	<h3>Void Functions</h3>
 	<p>
 		Because functions can potentially push values onto the stack,
 		the compiler normally does not consolidate push instruction accross <code>CALL</code> instructions.
@@ -206,7 +228,7 @@
 	</p>
 	<table class="code">
 		<tr>
-		<td class="in"><pre><code><strong>void</strong> qux</code></pre></td>
+		<td class="in"><pre><code><strong>void</strong> align</code></pre></td>
 		<td class="to">&nbsp;</td>
 		<td class="out">&nbsp;</td>
 		</tr>

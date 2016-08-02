@@ -136,8 +136,8 @@ class IdentifierTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB3,8,2,8,1,0x3E,0x3E]))
 
 	def testFunction(self):
-		code = helper.toBytes("CALL func0 \n CALL func1", helper.FPGM)
-		self.assertEqual(code, bytearray([0xB0,0,0x2B,0xB0,1,0x2B]))
+		code = helper.toBytes("CALL func0 8 \n CALL func1 9", helper.FPGM)
+		self.assertEqual(code, bytearray([0xB1,8,0,0x2B,0xB1,9,1,0x2B]))
 
 	def testStorageNew(self):
 		code = helper.toBytes("WS stor0 7 \n WS stor1 8 \n RS stor0 \n RS stor1")
@@ -279,6 +279,10 @@ class CallTest(unittest.TestCase):
 		code = helper.toBytes("LOOPCALL 3 func1 2 4 6", helper.FPGM)
 		self.assertEqual(code, bytearray([0xB4,2,4,6,3,1,0x2A]))
 
+	def testParameters(self):
+		code = helper.toBytes("WS stor0 7 \n CALL func0 0.25 8 cvt1 func0 stor0", helper.CVT + helper.FPGMPARAMS)
+		self.assertEqual(code, bytearray([0xB7,16,8,1,0,0,0,0,7,0x42,0x2B]))
+
 
 
 class DeltaTest(unittest.TestCase):
@@ -324,7 +328,7 @@ class ScopeTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB2,9,1,5,0x2E,0x58,0xB2,8,2,6,0x2E,0x58,0xB0,7,0x2E,0x59,0x2E,0x59,0x2E]))
 
 	def testFunctionScope(self):
-		code = helper.toBytes("FDEF f0 \n IF 2 \n MDAP 5 \n MDAP 6 \n EIF \n ENDF \n FDEF f1 \n POP \n ENDF", "", "fpgm")
+		code = helper.toBytes("FDEF 0 f0 \n IF 2 \n MDAP 5 \n MDAP 6 \n EIF \n ENDF \n FDEF 1 f1 \n POP \n ENDF", "", "fpgm")
 		self.assertEqual(code, bytearray([0xB1,1,0,0x2C,0xB0,2,0x58,0xB1,6,5,0x2E,0x2E,0x59,0x2D,0x2C,0x21,0x2D]))
 
 

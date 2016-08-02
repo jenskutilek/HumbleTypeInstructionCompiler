@@ -116,9 +116,13 @@ class RegistryError(unittest.TestCase):
 		with self.assertRaises(HumbleError):
 			helper.getData("cvt{ 0 foo \n 1 foo \n}")
 
-	def testDuplicateFunction(self):
+	def testDuplicateFunctionIndex(self):
 		with self.assertRaises(HumbleError):
-			helper.getData("fpgm{ FDEF foo \n POP \n ENDF \n FDEF foo \n POP \n ENDF \n}")
+			helper.getData("fpgm{ FDEF 0 foo \n POP \n ENDF \n FDEF 0 bar \n POP \n ENDF \n}")
+
+	def testDuplicateFunctionName(self):
+		with self.assertRaises(HumbleError):
+			helper.getData("fpgm{ FDEF 0 foo \n POP \n ENDF \n FDEF 1 foo \n POP \n ENDF \n}")
 
 	def testUndeclaredCvt(self):
 		with self.assertRaises(HumbleError):

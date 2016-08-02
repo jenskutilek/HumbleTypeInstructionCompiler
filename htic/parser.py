@@ -168,54 +168,88 @@ class Parser(object):
 		instr = self.tokenizer.get()
 		instruction = Instruction.newInstruction(instr)
 		instruction.setFlag(self.__flag())
-		if self.tokenizer.peek() != "\n":
-			for item in instruction.recipe:
-				if item == 'CVT':
-					name = self.__id()
-					index = self.data.getCvtIndex(name)
-					instruction.add(IntegerArgument(index))
-				elif item == 'WS':
-					name = self.__id()
-					self.data.addStorage(name)
-					index = self.data.getStorageIndex(name)
-					instruction.add(IntegerArgument(index))
-				elif item == 'RS':
-					name = self.__id()
-					index = self.data.getStorageIndex(name)
-					instruction.add(IntegerArgument(index))
-				elif item == 'FDEF':
-					name = self.__id()
-					if instr == "void":
-						self.data.addVoidFunction(name)
-					else:
-						self.data.addFunction(name)
-					index = self.data.getFunctionIndex(name)
-					instruction.add(IntegerArgument(index))
-				elif item == 'CALL':
-					name = self.__id()
-					index = self.data.getFunctionIndex(name)
-					instruction.add(IntegerArgument(index))
-					if self.data.isVoidFunction(name):
-						instruction.mightPush = False
-				elif item == 'VAL':
-					value = self.__val()
-					instruction.add(value)
-				elif item == 'VAL*':
-					while self.tokenizer.peek() != "\n" and \
-					      self.tokenizer.peek() != ")":
-						argument = self.__val()
-						instruction.add(argument)
-				elif item == 'DELTA':
+		self.__recipe(instruction)
+		return instruction
+
+
+	def __recipe(self, instruction):
+		if self.tokenizer.peek() == "\n" or \
+		   self.tokenizer.peek() == ")":
+			return
+		for item in instruction.recipe:
+			if item == 'getCVT':
+				name = self.__id()
+				index = self.data.getCvtIndex(name)
+				instruction.add(IntegerArgument(index))
+			elif item == 'setSTOR':
+				name = self.__id()
+				self.data.addStorage(name)
+				index = self.data.getStorageIndex(name)
+				instruction.add(IntegerArgument(index))
+			elif item == 'getSTOR':
+				name = self.__id()
+				index = self.data.getStorageIndex(name)
+				instruction.add(IntegerArgument(index))
+			elif item == 'setFUNC' or \
+			     item == 'setVOID':
+				index = self.__uint()
+				name = self.__id()
+				recipe = self.__parameters()
+				self.data.addFunction(index, name, recipe, item == 'setVOID')
+				instruction.add(IntegerArgument(index))
+			elif item == 'getFUNC':
+				name = self.__id()
+				index = self.data.getFunctionIndex(name)
+				instruction.add(IntegerArgument(index))
+			elif item == 'CALL':
+				name = self.__id()
+				index = self.data.getFunctionIndex(name)
+				recipe = self.data.getFunctionRecipe(name)
+				instruction.add(IntegerArgument(index))
+				instruction.recipe = recipe
+				if instruction.name == "LOOPCALL":
+					instruction.recipe *= instruction.arguments[-2].value
+				if self.data.isVoidFunction(name):
+					instruction.mightPush = False
+				# Parse new recipe
+				self.__recipe(instruction)
+				return
+			elif item == 'getVAL':
+				value = self.__val()
+				instruction.add(value)
+			elif item == 'getVALS':
+				while self.tokenizer.peek() != "\n" and \
+				      self.tokenizer.peek() != ")":
+					argument = self.__val()
+					instruction.add(argument)
+			elif item == 'getDELTA':
+				delta = self.__delta()
+				instruction.add(delta)
+			elif item == 'getDELTAS':
+				while self.tokenizer.peek() != "\n" and \
+				      self.tokenizer.peek() != ")":
 					delta = self.__delta()
 					instruction.add(delta)
-				elif item == 'DELTA*':
-					while self.tokenizer.peek() != "\n" and \
-					      self.tokenizer.peek() != ")":
-						delta = self.__delta()
-						instruction.add(delta)
-				else:
-					raise ValueError("Invalid recipe item: {}".format(item))
-		return instruction
+			else:
+				raise ValueError("Invalid recipe item: {}".format(item))
+
+	def __parameters(self):
+		parameters = []
+		while self.tokenizer.peek() != "\n" and \
+		      self.tokenizer.peek() != ")":
+			parameters.append(self.__parameter())
+		return tuple(parameters)
+
+
+	def __parameter(self):
+		token = self.tokenizer.get()
+		if   token.startswith("val"):  return 'getVAL'
+		elif token.startswith("pt"):   return 'getVAL'
+		elif token.startswith("cvt"):  return 'getCVT'
+		elif token.startswith("func"): return 'getFUNC'
+		elif token.startswith("stor"): return 'getSTOR'
+		else:
+			raise HumbleError("Invalid parameter: {}".format(token))
 
 
 	def __flag(self):

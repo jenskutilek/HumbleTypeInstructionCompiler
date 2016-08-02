@@ -220,7 +220,13 @@
 		<tr>
 			<td class="rule">maxpname</td>
 			<td class="equal"><em>=</em></td>
-			<td class="def"><em>'</em><b>maxZones</b><em>'&nbsp;/<br>'</em><b>maxTwilightPoints</b><em>'&nbsp;/<br>'</em><b>maxStorage</b><em>'&nbsp;/<br>'</em><b>maxFunctionDefs</b><em>'&nbsp;/<br>'</em><b>maxStackElements</b><em>'</em></td>
+			<td class="def"><em>'</em><b>maxZones</b><em>'&nbsp;/ '</em><b>maxTwilightPoints</b><em>'&nbsp;/ '</em><b>maxStorage</b><em>'&nbsp;/ '</em><b>maxFunctionDefs</b><em>'&nbsp;/ '</em><b>maxStackElements</b><em>'</em></td>
+		</tr>
+		<tr><td colspan="3">&nbsp;</td></tr>
+		<tr>
+			<td class="rule">parameter</td>
+			<td class="equal"><em>=</em></td>
+			<td class="def"><em>('</em><b>val</b><em>'&nbsp;/ '</em><b>pt</b><em>'&nbsp;/ '</em><b>cvt</b><em>'&nbsp;/ '</em><b>func</b><em>'&nbsp;/ '</em><b>stor</b><em>') *</em>VCHAR</td>
 		</tr>
 	</table>
 </div>
@@ -273,17 +279,17 @@
 		<tr>
 			<td class="rule"></td>
 			<td class="equal"><em>&nbsp;/</em></td>
-			<td><em>'</em><b>FDEF</b><em>'</em> s id</td>
+			<td><em>'</em><b>FDEF</b><em>'</em>s uint s id <em>*(</em>s parameter<em>)</em></td>
 		</tr>
 		<tr>
 			<td class="rule"></td>
 			<td class="equal"><em>&nbsp;/</em></td>
-			<td class="def"><em>'</em><b>CALL</b><em>'</em> s id <em>*(</em>s&nbsp;val<em>)</em></td>
+			<td class="def"><em>'</em><b>CALL</b><em>'</em> s id <em>*(</em>s&nbsp;arg<em>)</em></td>
 		</tr>
 		<tr>
 			<td class="rule"></td>
 			<td class="equal"><em>&nbsp;/</em></td>
-			<td class="def"><em>'</em><b>LOOPCALL</b><em>'</em> s val s id <em>*(</em>s&nbsp;val<em>)</em></td>
+			<td class="def"><em>'</em><b>LOOPCALL</b><em>'</em> s val s id <em>*(</em>s&nbsp;arg<em>)</em></td>
 		</tr>
 	</table>
 </div>
