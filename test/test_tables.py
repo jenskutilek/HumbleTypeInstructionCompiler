@@ -15,9 +15,9 @@ class GaspTest(unittest.TestCase):
 	def testGasp(self):
 		data = helper.getData("""gasp{
 			    7
-			   12         gray
-			  128 gridfit
-			65535 gridfit gray
+			   12           doGray
+			  128 doGridfit
+			65535 doGridfit doGray
 			}""")
 		self.assertEqual(data.gasp[0], (7, False, False))
 		self.assertEqual(data.gasp[1], (12, False, True))

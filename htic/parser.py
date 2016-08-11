@@ -60,16 +60,15 @@ class Parser(object):
 			size = self.__uint()
 			doGridFit = False
 			doGray = False
-			if self.tokenizer.peek() == "gridfit":
+			if self.tokenizer.peek() == "doGridfit":
 				doGridFit = True
 				self.tokenizer.get()
-			if self.tokenizer.peek() == "gray":
+			if self.tokenizer.peek() == "doGray":
 				doGray = True
 				self.tokenizer.get()
 			self.data.addGasp(size, doGridFit, doGray)
 			self.__nl()
 		self.__close()
-
 
 
 	def __maxp(self):
