@@ -267,6 +267,10 @@ class PushTest(unittest.TestCase):
 		expected.append(0xfe)
 		self.assertEqual(helper.toBytes(code), expected)
 
+	def testPUSHandPOP(self):
+		code = helper.toBytes("push 2 \n POP \n push 1")
+		self.assertEqual(code, bytearray([0xB0,2,0x21,0xB0,1]))
+
 
 
 class CallTest(unittest.TestCase):

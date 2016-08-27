@@ -72,7 +72,7 @@ class Instruction(object):
 		elif name == "NROUND":    return Instruction(name, 0x6C, 3, ('getVAL',), True)
 		elif name == "ODD":       return Instruction(name, 0x56, 0, ('getVAL',), True)
 		elif name == "OR":        return Instruction(name, 0x5B, 0, ('getVAL', 'getVAL'), True)
-		elif name == "POP":       return Instruction(name, 0x21, 0, (), False)
+		elif name == "POP":       return Instruction(name, 0x21, 0, (), True) # special case for mightPush
 		elif name == "push":      return Instruction(None, None, 0, ('getVALS',), True)
 		elif name == "RCVT":      return Instruction(name, 0x45, 0, ('getCVT',), True)
 		elif name == "RDTG":      return Instruction(name, 0x7D, 0, (), False)
