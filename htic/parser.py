@@ -60,13 +60,17 @@ class Parser(object):
 			size = self.__uint()
 			doGridFit = False
 			doGray = False
-			if self.tokenizer.peek() == "doGridfit":
-				doGridFit = True
-				self.tokenizer.get()
-			if self.tokenizer.peek() == "doGray":
-				doGray = True
-				self.tokenizer.get()
-			self.data.addGasp(size, doGridFit, doGray)
+			symSmoothing = False
+			symGridfit = False
+			while self.tokenizer.peek() != "\n":
+				flag = self.tokenizer.get()
+				if   flag == "doGridfit"   : doGridFit = True
+				elif flag == "doGray"      : doGray = True
+				elif flag == "symSmoothing": symSmoothing = True
+				elif flag == "symGridfit"  : symGridfit = True
+				else:
+					raise HumbleError("Unknown gasp flag: {}".format(flag))
+			self.data.addGasp(size, doGridFit, doGray, symSmoothing, symGridfit)
 			self.__nl()
 		self.__close()
 

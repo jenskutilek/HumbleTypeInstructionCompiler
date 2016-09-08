@@ -15,14 +15,14 @@ class GaspTest(unittest.TestCase):
 	def testGasp(self):
 		data = helper.getData("""gasp{
 			    7
-			   12           doGray
-			  128 doGridfit
-			65535 doGridfit doGray
+			   12           doGray symSmoothing
+			  128 doGridfit                     symGridfit
+			65535 doGridfit doGray symSmoothing symGridfit
 			}""")
-		self.assertEqual(data.gasp[0], (7, False, False))
-		self.assertEqual(data.gasp[1], (12, False, True))
-		self.assertEqual(data.gasp[2], (128, True, False))
-		self.assertEqual(data.gasp[3], (65535, True, True))
+		self.assertEqual(data.gasp[0], (7, False, False, False, False))
+		self.assertEqual(data.gasp[1], (12, False, True, True, False))
+		self.assertEqual(data.gasp[2], (128, True, False, False, True))
+		self.assertEqual(data.gasp[3], (65535, True, True, True, True))
 
 
 

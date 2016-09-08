@@ -42,7 +42,7 @@
 		<tr>
 			<td class="rule">gasp</td>
 			<td class="equal"><em>=</em></td>
-			<td class="def"><em>'</em><b>gasp</b><em>'</em> open <em>*(</em>ws uint <em>[</em>s&nbsp;<em>'</em><b>doGridfit</b><em>'] [</em>s&nbsp;<em>'</em><b>doGray</b><em>']</em>&nbsp;nl<em>)</em> close</td>
+			<td class="def"><em>'</em><b>gasp</b><em>'</em> open <em>*(</em>ws uint <em>*(</em>s&nbsp;gaspflag<em>)</em>&nbsp;nl<em>)</em> close</td>
 		</tr>
 		<tr>
 			<td class="rule">maxp</td>
@@ -217,6 +217,11 @@
 			<td class="def"><em>'</em><b>==</b><em>'&nbsp;/ '</em><b>!=</b><em>'&nbsp;/ '</em><b>&gt;</b><em>'&nbsp;&nbsp;/ '</em><b>&gt;=</b><em>'&nbsp;/ '</em><b>&lt;</b><em>'&nbsp;&nbsp;/ '</em><b>&lt;=</b><em>'&nbsp;/ '</em><b>+</b><em>'&nbsp;&nbsp;/ '</em><b>-</b><em>'&nbsp;&nbsp;/ '</em><b>*</b><em>'&nbsp;&nbsp;/ '</em><b>/</b><em>'&nbsp;&nbsp;/ '</em><b>or</b><em>'&nbsp;/ '</em><b>and</b><em>'</em></td>
 		</tr>
 		<tr><td colspan="3">&nbsp;</td></tr>
+		<tr>
+			<td class="rule">gaspflag</td>
+			<td class="equal"><em>=</em></td>
+			<td class="def"><em>'</em><b>doGridfit</b><em>'&nbsp;/ '</em><b>doGray</b><em>'&nbsp;/ '</em><b>symSmoothing</b><em>'&nbsp;/ '</em><b>symGridfit</b><em>'</em></td>
+		</tr>
 		<tr>
 			<td class="rule">maxpname</td>
 			<td class="equal"><em>=</em></td>

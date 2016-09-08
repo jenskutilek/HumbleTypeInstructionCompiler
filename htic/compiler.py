@@ -12,10 +12,12 @@ def toConsole(sourceFile):
 	translator = StringTranslator()
 
 	print("-------- gasp --------")
-	for size, doGridfit, doGray in data.gasp:
+	for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
 		line = "{:5d}".format(size)
-		if doGridfit: line += " gridfit"
-		if doGray   : line += " gray"
+		if doGridfit    : line += " doGridfit"
+		if doGray       : line += " doGray"
+		if symSmoothing : line += " symSmoothing"
+		if symGridfit   : line += " symGridfit"
 		print(line)
 
 	print("-------- maxp --------")
@@ -46,26 +48,22 @@ def toFontforge(sourceFile, font):
 
 	if data.gasp:
 		gasp = []
-		for size, doGridfit, doGray in data.gasp:
+		for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
 			flags = []
-			if doGridfit:
-				flags.append("gridfit")
-			if doGray:
-				flags.append("antialias")
+			if doGridfit    : flags.append("gridfit")
+			if doGray       : flags.append("antialias")
+			if symSmoothing : flags.append("symmetric-smoothing")
+			if symGridfit   : flags.append("gridfit+smoothing")
 			gasp.append((size, tuple(flags)))
+		font.gasp_version = 1
 		font.gasp = tuple(gasp)
 
 	for name, value in data.maxp.items():
-		if name == "maxStackElements":
-			font.maxp_maxStackDepth = value
-		if name == "maxFunctionDefs":
-			font.maxp_FDEFs = value
-		if name == "maxStorage":
-			font.maxp_storageCnt = value
-		if name == "maxZones":
-			font.maxp_zones = value
-		if name == "maxTwilightPoints":
-			font.maxp_twilightPtCnt = value
+		if name == "maxStackElements" : font.maxp_maxStackDepth = value
+		if name == "maxFunctionDefs"  : font.maxp_FDEFs = value
+		if name == "maxStorage"       : font.maxp_storageCnt = value
+		if name == "maxZones"         : font.maxp_zones = value
+		if name == "maxTwilightPoints": font.maxp_twilightPtCnt = value
 
 	if data.cvt:
 		font.cvt = data.cvt

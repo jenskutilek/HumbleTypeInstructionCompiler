@@ -36,11 +36,11 @@
 	<p>
 		This block represents the
 		<a target="_blank" href="http://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6gasp.html">gasp</a>
-		table. Only version 0 of the table is supported.
+		table, version 1.
 		Each line starts with a size, followed by the optional flags
 		<code>gridfit</code> and <code>gray</code>, which apply up to that size.
 	</p>
-	<pre><code>gasp<br>{<br>      7         gray<br>  65535 gridfit gray<br>}</code></pre>
+	<pre><code>gasp<br>{<br>      7           doGray<br>  65535 doGridfit doGray symSmoothing symGridfit<br>}</code></pre>
 </div>
 
 <div id="maxp">

@@ -9,7 +9,7 @@ class Data(object):
 	def __init__(self):
 
 		self.gasp = []
-		"""[(int size, bool doGridfit, bool doGray)]"""
+		"""[(int size, bool doGridfit, bool doGray, bool symSmoothing, bool symGridfit)]"""
 
 		self.maxp = {}
 		"""{string name : int value}"""
@@ -34,8 +34,8 @@ class Data(object):
 		self.__flagLookup = {}
 
 
-	def addGasp(self, size, doGridFit, doGray):
-		self.gasp.append((size, doGridFit, doGray))
+	def addGasp(self, size, doGridFit, doGray, symSmoothing, symGridfit):
+		self.gasp.append((size, doGridFit, doGray, symSmoothing, symGridfit))
 
 
 	def addMaxp(self, name, value):
