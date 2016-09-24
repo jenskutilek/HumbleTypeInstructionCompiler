@@ -356,5 +356,5 @@ class SubBlockTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB0,4,0x2E,0xB0,5,0x2E,0xB0,6,0x2E]))
 
 	def testSubSubBlock(self):
-		code = helper.toBytes("MDAP 3 \n { \n MDAP 4 \n MDAP 5 \n { \n MDAP 6 \n MDAP 7 \n } \n }")
-		self.assertEqual(code, bytearray([0xB0,3,0x2E,0xB1,5,4,0x2E,0x2E,0xB1,7,6,0x2E,0x2E]))
+		code = helper.toBytes("MDAP 3 \n { \n MDAP 4 \n MDAP 5 \n { \n MDAP 6 \n MDAP 7 \n } \n } \n MDAP 8")
+		self.assertEqual(code, bytearray([0xB1,8,3,0x2E,0xB1,5,4,0x2E,0x2E,0xB1,7,6,0x2E,0x2E,0x2E]))

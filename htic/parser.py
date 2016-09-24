@@ -145,7 +145,7 @@ class Parser(object):
 		while self.tokenizer.peek() != "}":
 			if self.tokenizer.peek() == "{":
 				subblock = self.__block()
-				instruction = Instruction.newBlockInstruction(subblock)
+				instruction = Instruction.newSubBlockInstruction(subblock)
 				block.add(instruction)
 			else:
 				self.__ws()
