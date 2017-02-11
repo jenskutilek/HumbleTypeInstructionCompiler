@@ -1,8 +1,8 @@
 from __future__ import absolute_import
+
 from . import helper
 
 import unittest
-
 
 
 class FlagTest(unittest.TestCase):
@@ -20,7 +20,6 @@ class FlagTest(unittest.TestCase):
 	def testAliasBrackets(self):
 		code = helper.toBytes("MDRP[m] 8 \n IUP[x]", helper.FLAGS)
 		self.assertEqual(code, FlagTest.EXPECTED)
-
 
 
 class ArgumentTest(unittest.TestCase):
@@ -44,7 +43,6 @@ class ArgumentTest(unittest.TestCase):
 	def testPushConsolidationBreak(self):
 		code = helper.toBytes("push 1 \n SWAP \n push 2 3")
 		self.assertEqual(code, bytearray([0xB0,1,0x23,0xB1,2,3]))
-
 
 
 class LoopTest(unittest.TestCase):
@@ -86,7 +84,6 @@ class LoopTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB4,1,2,3,4,4,0x17,0x32]))
 
 
-
 class ConversionTest(unittest.TestCase):
 
 	EXPECTED = bytearray([0xB2,0x00,0xff,0x40,0xBB,0xff,0xc0,0x7f,0xff,0x80,0x00,0xff,0xff])
@@ -112,13 +109,11 @@ class ConversionTest(unittest.TestCase):
 		self.assertEqual(code, ConversionTest.EXPECTED)
 
 
-
 class CommentTest(unittest.TestCase):
 
 	def testComment(self):
 		code = helper.toBytes("MPPEM#SDB 8 \n#SDS 2")
 		self.assertEqual(code, bytearray([0x4B]))
-
 
 
 class IdentifierTest(unittest.TestCase):
@@ -140,7 +135,6 @@ class IdentifierTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB4,0,0,8,0,7,0x42,0x42,0x43]))
 
 
-
 class NestingTest(unittest.TestCase):
 
 	def testNestedLeft(self):
@@ -154,7 +148,6 @@ class NestingTest(unittest.TestCase):
 	def testNestedBoth(self):
 		code = helper.toBytes("IF ((NEG 7) == (NEG 8)) \n EIF")
 		self.assertEqual(code, bytearray([0xB0,7,0x65,0xB0,8,0x65,0x54,0x58,0x59]))
-
 
 
 class OperatorTest(unittest.TestCase):
@@ -206,7 +199,6 @@ class OperatorTest(unittest.TestCase):
 	def testOptimizingAND(self):
 		code = helper.toBytes("IF (7 and 8) \n EIF")
 		self.assertEqual(code, bytearray([0xB1,7,8,0x5A,0x58,0x59]))
-
 
 
 class PushTest(unittest.TestCase):
@@ -264,7 +256,6 @@ class PushTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0xB0,2,0x21,0xB0,1]))
 
 
-
 class CallTest(unittest.TestCase):
 
 	def testCALL(self):
@@ -278,7 +269,6 @@ class CallTest(unittest.TestCase):
 	def testParameters(self):
 		code = helper.toBytes("WS stor0 7 \n CALL func0 0.25 8 cvt1 func0 stor0", helper.CVT + helper.FPGMPARAMS)
 		self.assertEqual(code, bytearray([0xB7,16,8,1,0,0,0,0,7,0x42,0x2B]))
-
 
 
 class DeltaTest(unittest.TestCase):
@@ -312,7 +302,6 @@ class DeltaTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0x4B,0xB5,0x00,1,0x10,1,2,6,0x5E,0x5D,0x18]))
 
 
-
 class ScopeTest(unittest.TestCase):
 
 	def testIfElseScope(self):
@@ -326,7 +315,6 @@ class ScopeTest(unittest.TestCase):
 	def testFunctionScope(self):
 		code = helper.toBytes("FDEF 0 f0 \n IF 2 \n MDAP 5 \n MDAP 6 \n EIF \n ENDF \n FDEF 1 f1 \n POP \n ENDF", "", "fpgm")
 		self.assertEqual(code, bytearray([0xB1,1,0,0x2C,0xB0,2,0x58,0xB1,6,5,0x2E,0x2E,0x59,0x2D,0x2C,0x21,0x2D]))
-
 
 
 class SubBlockTest(unittest.TestCase):

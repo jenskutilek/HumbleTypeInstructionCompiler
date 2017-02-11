@@ -4,15 +4,12 @@ class Accumulator(object):
 		self.writer = writer
 		self.cache = []
 
-
 	def writeInstruction(self, name, opCode, flag, maxFlag):
 		self.flush()
 		self.writer.writeInstruction(name, opCode, flag, maxFlag)
 
-
 	def writeArgument(self, argument):
 		self.cache.append(argument)
-
 
 	def flush(self):
 		length = len(self.cache)
@@ -49,7 +46,6 @@ class Accumulator(object):
 					self.writer.writeWord(self.cache[current])
 				current += 1
 		self.cache = []
-
 
 
 def isByte(value):

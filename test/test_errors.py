@@ -1,10 +1,9 @@
 from __future__ import absolute_import
-from . import helper
 
+from . import helper
 from htic.error import HumbleError
 
 import unittest
-
 
 
 class ParserError(unittest.TestCase):
@@ -109,7 +108,6 @@ class ParserError(unittest.TestCase):
 			helper.getData("cvt  0 6ar \n}")
 
 
-
 class RegistryError(unittest.TestCase):
 
 	def testDuplicateCvt(self):
@@ -139,7 +137,6 @@ class RegistryError(unittest.TestCase):
 	def testUndeclaredFlag(self):
 		with self.assertRaises(HumbleError):
 			helper.toBytes("IUP+foo")
-
 
 
 class InstructionError(unittest.TestCase):

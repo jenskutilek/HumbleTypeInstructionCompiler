@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from .error import HumbleError
 
 
-
 class Data(object):
 	"""Manage parsed data"""
 
@@ -33,26 +32,20 @@ class Data(object):
 		self.__storageLookup = {}
 		self.__flagLookup = {}
 
-
 	def addGasp(self, size, doGridFit, doGray, symSmoothing, symGridfit):
 		self.gasp.append((size, doGridFit, doGray, symSmoothing, symGridfit))
-
 
 	def addMaxp(self, name, value):
 		self.maxp[name] = value
 
-
 	def setFpgm(self, block):
 		self.fpgm = block
-
 
 	def setPrep(self, block):
 		self.prep = block
 
-
 	def addGlyph(self, name, block):
 		self.glyphs[name] = block
-
 
 	def addCvt(self, name, value):
 		if name in self.__cvtLookup:
@@ -60,7 +53,6 @@ class Data(object):
 		index = len(self.cvt)
 		self.cvt.append(value)
 		self.__cvtLookup[name] = index
-
 
 	def addFunction(self, index, name, recipe, isVoid):
 		if name in self.__functionLookup:
@@ -72,16 +64,13 @@ class Data(object):
 		if isVoid:
 			self.__voidFunctionList.append(name)
 
-
 	def addStorage(self, name):
 		if name not in self.__storageLookup:
 			index = len(self.__storageLookup)
 			self.__storageLookup[name] = index
 
-
 	def addFlag(self, name, value):
 		self.__flagLookup[name] = value
-
 
 	def getCvtIndex(self, name):
 		try:
@@ -89,13 +78,11 @@ class Data(object):
 		except KeyError:
 			raise HumbleError("Undeclared CVT identifier: {}".format(name))
 
-
 	def getFunctionIndex(self, name):
 		try:
 			return self.__functionLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared function identifier: {}".format(name))
-
 
 	def getFunctionRecipe(self, name):
 		try:
@@ -103,17 +90,14 @@ class Data(object):
 		except KeyError:
 			return ()
 
-
 	def isVoidFunction(self, name):
 		return name in self.__voidFunctionList
-
 
 	def getStorageIndex(self, name):
 		try:
 			return self.__storageLookup[name]
 		except KeyError:
 			raise HumbleError("Undeclared storage identifier: {}".format(name))
-
 
 	def getFlagValue(self, name):
 		try:

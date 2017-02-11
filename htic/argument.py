@@ -3,10 +3,8 @@ class Argument(object):
 	def canChain(self):
 		return False
 
-
 	def chain(self, other):
 		raise TypeError
-
 
 
 class IntegerArgument(Argument):
@@ -14,10 +12,8 @@ class IntegerArgument(Argument):
 	def __init__(self, value):
 		self.value = value
 
-
 	def write(self, accumulator):
 		accumulator.writeArgument(self.value)
-
 
 
 class DeltaArgument(Argument):
@@ -28,13 +24,11 @@ class DeltaArgument(Argument):
 		self.target = None
 		self.base = None
 
-
 	def __lt__(self, other):
 		if self.ppem == other.ppem:
 			return self.steps < other.steps
 		else:
 			return self.ppem < other.ppem
-
 
 	def write(self, accumulator):
 		offset = self.ppem - self.base

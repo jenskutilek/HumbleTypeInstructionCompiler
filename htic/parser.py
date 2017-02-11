@@ -12,12 +12,10 @@ from .instruction import Instruction
 from .tokenizer import Tokenizer
 
 
-
 def parseFile(sourceFile):
 	with io.open(sourceFile) as stream:
 		parser = Parser()
 		return parser.parse(stream)
-
 
 
 class Parser(object):
@@ -25,7 +23,6 @@ class Parser(object):
 	def __init__(self):
 		self.tokenizer = None
 		self.data = None
-
 
 	def parse(self, stream):
 		self.tokenizer = Tokenizer(stream)
@@ -36,7 +33,6 @@ class Parser(object):
 			e.position = self.tokenizer.position
 			raise
 		return self.data
-
 
 	# The following methods mirror the
 	# grammar from doc/grammar.html
@@ -53,7 +49,6 @@ class Parser(object):
 			elif name == "prep" : self.__prep()
 			else: self.__glyph()
 			name = self.tokenizer.peek()
-
 
 	def __gasp(self):
 		self.__skip("gasp")
@@ -77,7 +72,6 @@ class Parser(object):
 			self.__nl()
 		self.__close()
 
-
 	def __maxp(self):
 		self.__skip("maxp")
 		self.__open()
@@ -88,7 +82,6 @@ class Parser(object):
 			self.data.addMaxp(name, value)
 			self.__nl()
 		self.__close()
-
 
 	def __maxpname(self):
 		token = self.tokenizer.get()
@@ -101,7 +94,6 @@ class Parser(object):
 		else:
 			raise HumbleError("Unknown maxp identifier: {}".format(token))
 
-
 	def __cvt(self):
 		self.__skip("cvt")
 		self.__open()
@@ -112,7 +104,6 @@ class Parser(object):
 			self.data.addCvt(name, value)
 			self.__nl()
 		self.__close()
-
 
 	def __flags(self):
 		self.__skip("flags")
@@ -125,22 +116,18 @@ class Parser(object):
 			self.__nl()
 		self.__close()
 
-
 	def __fpgm(self):
 		self.__skip("fpgm")
 		self.data.setFpgm(self.__block())
-
 
 	def __prep(self):
 		self.__skip("prep")
 		self.data.setPrep(self.__block())
 
-
 	def __glyph(self):
 		name = self.__id()
 		block = self.__block()
 		self.data.addGlyph(name, block)
-
 
 	def __block(self):
 		block = Block()
@@ -157,18 +144,15 @@ class Parser(object):
 		self.__close()
 		return block
 
-
 	def __open(self):
 		self.__ws()
 		self.__skip("{")
 		self.__ws()
 
-
 	def __close(self):
 		self.__ws()
 		self.__skip("}")
 		self.__ws()
-
 
 	def __instr(self):
 		instr = self.tokenizer.get()
@@ -176,7 +160,6 @@ class Parser(object):
 		instruction.setFlag(self.__flag())
 		self.__recipe(instruction)
 		return instruction
-
 
 	def __recipe(self, instruction):
 		if self.tokenizer.peek() == "\n" or \
@@ -246,7 +229,6 @@ class Parser(object):
 			parameters.append(self.__parameter())
 		return tuple(parameters)
 
-
 	def __parameter(self):
 		token = self.tokenizer.get()
 		if   token.startswith("val"):  return 'getVAL'
@@ -257,7 +239,6 @@ class Parser(object):
 		else:
 			raise HumbleError("Invalid parameter: {}".format(token))
 
-
 	def __flag(self):
 		flag = 0
 		if self.tokenizer.peek() == "[":
@@ -265,7 +246,6 @@ class Parser(object):
 			flag = self.__flagval()
 			self.__skip("]")
 		return flag
-
 
 	def __flagval(self):
 		try:
@@ -277,7 +257,6 @@ class Parser(object):
 			return self.data.getFlagValue(name)
 		finally:
 			self.tokenizer.unmark()
-
 
 	def __val(self):
 		if self.tokenizer.peek() == "(":
@@ -295,7 +274,6 @@ class Parser(object):
 		else:
 			return self.__num()
 
-
 	def __operation(self):
 		argument = self.__val()
 		instruction = Instruction.newOperationInstruction(self.tokenizer.get())
@@ -304,16 +282,13 @@ class Parser(object):
 		instruction.add(argument)
 		return instruction
 
-
 	def __nl(self):
 		self.__skip("\n")
 		self.__ws()
 
-
 	def __ws(self):
 		while self.tokenizer.peek() == "\n":
 			self.tokenizer.get()
-
 
 	def __uint(self):
 		token = self.tokenizer.get()
@@ -324,7 +299,6 @@ class Parser(object):
 		except ValueError:
 			pass
 		raise HumbleError("Invalid unsigned integer: {}".format(token))
-
 
 	def __num(self):
 		token = self.tokenizer.get()
@@ -348,7 +322,6 @@ class Parser(object):
 			pass
 		raise HumbleError("Invalid numeric argument: {}".format(token))
 
-
 	def __delta(self):
 		ppemToken = self.tokenizer.get()
 		signToken = self.tokenizer.get()
@@ -362,7 +335,6 @@ class Parser(object):
 			pass
 		raise HumbleError("Invalid delta modifier: {}{}{}".format(ppemToken, signToken, stepsToken))
 
-
 	def __bits(self):
 		token = self.tokenizer.get()
 		try:
@@ -370,14 +342,12 @@ class Parser(object):
 		except ValueError:
 			raise HumbleError("Invalid bit value: {}".format(token))
 
-
 	def __id(self):
 		token = self.tokenizer.get()
 		if re.match("[0-9A-Za-z_\.]+$", token):
 			return token
 		else:
 			raise HumbleError("Invalid identifier: {}".format(token))
-
 
 	def __skip(self, string):
 		token = self.tokenizer.get()

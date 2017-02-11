@@ -5,7 +5,6 @@ from .block import Block
 from .error import HumbleError
 
 
-
 class Instruction(object):
 
 	@staticmethod
@@ -126,13 +125,11 @@ class Instruction(object):
 		else:
 			raise HumbleError("Unsupported instruction: {}".format(name))
 
-
 	@staticmethod
 	def newSubBlockInstruction(block):
 		instruction = SubBlockInstruction()
 		instruction.block = block
 		return instruction
-
 
 	@staticmethod
 	def newOperationInstruction(symbol):
@@ -151,7 +148,6 @@ class Instruction(object):
 		else:
 			raise HumbleError("Invalid operator symbol: {}".format(symbol))
 
-
 	@staticmethod
 	def _newDeltaInstruction(name):
 		if   name == "DELTAC1": return Instruction(name, 0x73, 0, None, False)
@@ -162,7 +158,6 @@ class Instruction(object):
 		elif name == "DELTAP3": return Instruction(name, 0x72, 0, None, False)
 		else:
 			raise NameError(name)
-
 
 	def __init__(self, name, opCode, maxFlag, recipe, mightPush):
 		self.name = name
@@ -176,33 +171,26 @@ class Instruction(object):
 		self.arguments = []
 		self.post = None
 
-
 	def setFlag(self, flag):
 		if flag <= self.maxFlag:
 			self.flag = flag
 		else:
 			raise HumbleError("Invalid flag value for {}: {}".format(self.name, flag))
 
-
 	def add(self, argument):
 		self.arguments.append(argument)
-
 
 	def canMerge(self, other):
 		return False
 
-
 	def merge(self, other):
 		raise TypeError
-
 
 	def canChain(self):
 		return True
 
-
 	def canPush(self):
 		return self.mightPush or self.pre or (self.post and self.post.canPush())
-
 
 	def chain(self, other):
 		if self.pre:
@@ -219,7 +207,6 @@ class Instruction(object):
 			else:
 				self.post = other
 
-
 	def write(self, accumulator):
 		if self.pre:
 			self.pre.write(accumulator)
@@ -230,10 +217,8 @@ class Instruction(object):
 		if self.name:
 			self._writeName(accumulator)
 
-
 	def _writeName(self, accumulator):
 		accumulator.writeInstruction(self.name, self.opCode, self.flag, self.maxFlag)
-
 
 
 class BlockInstruction(Instruction):
@@ -243,7 +228,6 @@ class BlockInstruction(Instruction):
 		self.stops = stops
 		self.block = Block()
 
-
 	def canMerge(self, other):
 		if isinstance(self.block.last, BlockInstruction):
 			return True
@@ -252,15 +236,12 @@ class BlockInstruction(Instruction):
 		else:
 			return False
 
-
 	def merge(self, other):
 		self.block.add(other)
-
 
 	def write(self, accumulator):
 		Instruction.write(self, accumulator)
 		self.block.write(accumulator.writer)
-
 
 
 class CallInstruction(Instruction):
@@ -269,13 +250,11 @@ class CallInstruction(Instruction):
 		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
 		self.insertIndex = insertIndex
 
-
 	def add(self, argument):
 		if len(self.arguments) >= self.insertIndex:
 			self.arguments.insert(-self.insertIndex, argument)
 		else:
 			self.arguments.append(argument)
-
 
 
 class DeltaInstruction(Instruction):
@@ -284,7 +263,6 @@ class DeltaInstruction(Instruction):
 		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
 		self.target = None
 
-
 	def add(self, argument):
 		if self.target is not None:
 			argument.target = self.target
@@ -292,14 +270,11 @@ class DeltaInstruction(Instruction):
 		else:
 			self.target = argument.value
 
-
 	def canMerge(self, other):
 		return other.name == self.name
 
-
 	def merge(self, other):
 		self.arguments += other.arguments
-
 
 	def write(self, accumulator):
 		self.arguments.sort()
@@ -343,10 +318,8 @@ class DeltaInstruction(Instruction):
 			block.last.chain(self.post)
 		block.last.write(accumulator)
 
-
 	def __makeDELTA(self, variant):
 		return Instruction._newDeltaInstruction(self.name + str(variant))
-
 
 	def __makeSDB(self, base):
 		sdb = Instruction.newInstruction("SDB")
@@ -354,24 +327,19 @@ class DeltaInstruction(Instruction):
 		return sdb
 
 
-
 class LoopInstruction(Instruction):
 
 	LIMIT = 4
 
-
 	def __init__(self, name, opCode, maxFlag, recipe, mightPush):
 		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
-
 
 	def canMerge(self, other):
 		return other.name == self.name and other.flag == self.flag and \
 			self.arguments and other.arguments
 
-
 	def merge(self, other):
 		self.arguments += other.arguments
-
 
 	def write(self, accumulator):
 		block = Block()
@@ -396,13 +364,11 @@ class LoopInstruction(Instruction):
 			Instruction._writeName(self, accumulator)
 
 
-
 class SubBlockInstruction(Instruction):
 
 	def __init__(self):
 		Instruction.__init__(self, None, None, None, (), False)
 		self.block = Block()
-
 
 	def write(self, accumulator):
 		Instruction.write(self, accumulator)

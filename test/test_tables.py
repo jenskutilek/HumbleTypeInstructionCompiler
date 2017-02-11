@@ -1,8 +1,8 @@
 from __future__ import absolute_import
+
 from . import helper
 
 import unittest
-
 
 
 class GaspTest(unittest.TestCase):
@@ -23,7 +23,6 @@ class GaspTest(unittest.TestCase):
 		self.assertEqual(data.gasp[1], (12, False, True, True, False))
 		self.assertEqual(data.gasp[2], (128, True, False, False, True))
 		self.assertEqual(data.gasp[3], (65535, True, True, True, True))
-
 
 
 class MaxpTest(unittest.TestCase):
@@ -58,7 +57,6 @@ class MaxpTest(unittest.TestCase):
 		self.assertEqual(data.maxp['maxTwilightPoints'], 16)
 
 
-
 class CvtTest(unittest.TestCase):
 
 	def testCvtEmpty(self):
@@ -78,7 +76,6 @@ class CvtTest(unittest.TestCase):
 			}""")
 		self.assertEqual(len(data.cvt), 7)
 		self.assertEqual(data.cvt, [0, 0, 64, -64, 32767, -32768, -1])
-
 
 
 class FpgmPrepTest(unittest.TestCase):

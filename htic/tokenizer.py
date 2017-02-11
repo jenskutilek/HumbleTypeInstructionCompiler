@@ -1,7 +1,6 @@
 import re
 
 
-
 class Tokenizer(object):
 
 	def __init__(self, stream):
@@ -11,14 +10,12 @@ class Tokenizer(object):
 		self.cache = []
 		self.doCache = False
 
-
 	def peek(self):
 		self.__refresh()
 		if self.tokens:
 			return self.tokens[0]
 		else:
 			return ""
-
 
 	def get(self):
 		self.__refresh()
@@ -31,22 +28,18 @@ class Tokenizer(object):
 		else:
 			return ""
 
-
 	def mark(self):
 		self.cache = []
 		self.doCache = True
-
 
 	def unmark(self):
 		self.cache = []
 		self.doCache = False
 
-
 	def rewind(self):
 		self.tokens = self.cache + self.tokens
 		self.position -= self.cache.count("\n")
 		self.unmark()
-
 
 	def __refresh(self):
 		if not self.tokens:

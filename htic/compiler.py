@@ -6,7 +6,6 @@ from .translator import BinaryTranslator
 from .translator import StringTranslator
 
 
-
 def toConsole(sourceFile):
 	data = parseFile(sourceFile)
 	translator = StringTranslator()
@@ -39,7 +38,6 @@ def toConsole(sourceFile):
 	for name, block in data.glyphs.items():
 		print("--------", name, "--------")
 		print(translator.translate(block))
-
 
 
 def toFontforge(sourceFile, font):
@@ -80,7 +78,6 @@ def toFontforge(sourceFile, font):
 		except Exception:
 			print("Error with glyph: " + name)
 			raise
-
 
 
 # EXTEND Add to* function for new target type
