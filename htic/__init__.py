@@ -4,4 +4,4 @@ from .compiler import toFontforge
 
 # EXTEND Import to* function
 
-__version__ = "1.5"
+__version__ = "1.6"

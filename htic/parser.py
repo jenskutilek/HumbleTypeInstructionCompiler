@@ -261,9 +261,6 @@ class Parser(object):
 			self.__skip("[")
 			flag = self.__flagval()
 			self.__skip("]")
-		elif self.tokenizer.peek() == "+":
-			self.__skip("+")
-			flag = self.__flagval()
 		return flag
 
 

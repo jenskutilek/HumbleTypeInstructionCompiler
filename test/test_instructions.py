@@ -17,16 +17,8 @@ class FlagTest(unittest.TestCase):
 		code = helper.toBytes("MDRP[11110] 8 \n IUP[1]")
 		self.assertEqual(code, FlagTest.EXPECTED)
 
-	def testBinaryPlus(self):
-		code = helper.toBytes("MDRP+11110 8 \n IUP+1")
-		self.assertEqual(code, FlagTest.EXPECTED)
-
 	def testAliasBrackets(self):
 		code = helper.toBytes("MDRP[m] 8 \n IUP[x]", helper.FLAGS)
-		self.assertEqual(code, FlagTest.EXPECTED)
-
-	def testAliasPlus(self):
-		code = helper.toBytes("MDRP+m 8 \n IUP+x", helper.FLAGS)
 		self.assertEqual(code, FlagTest.EXPECTED)
 
 

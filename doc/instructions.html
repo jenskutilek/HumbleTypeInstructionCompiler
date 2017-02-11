@@ -48,12 +48,12 @@
 	<p>
 		Instruction flags can be written in binary or
 		<a href="blocks.html#flags">alias</a> form.
-		They follow the instruction name in square brackets,
-		or separated by a <code>+</code> character. Flags with a value of zero can be omitted.
+		They follow the instruction name in square brackets.
+		Flags with a value of zero can be omitted.
 	</p>
 	<table class="code">
 		<tr>
-		<td class="in"><pre><code>MIRP[<strong>01101</strong>]<br>MIRP+<strong>stem</strong><br>MIRP</code></pre></td>
+		<td class="in"><pre><code>MIRP[<strong>01101</strong>]<br>MIRP[<strong>stem</strong>]<br>MIRP</code></pre></td>
 		<td class="to">▶</td>
 		<td class="out"><pre><samp>MIRP[<strong>01101</strong>]<br>MIRP[<strong>01101</strong>]<br>MIRP[<strong>00000</strong>]</samp></pre></td>
 		</tr>
