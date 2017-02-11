@@ -38,6 +38,9 @@ class Parser(object):
 		return self.data
 
 
+	# The following methods mirror the
+	# grammar from doc/grammar.html
+
 	def __root(self):
 		self.__ws()
 		name = self.tokenizer.peek()
