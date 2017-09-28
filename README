@@ -1,6 +1,0 @@
-The Humble Type Instruction Compiler translates
-humble type instructions into TrueType instructions,
-while taking care of cumbersome tasks like optimized
-stack pushes and index mapping.
-
-Find a full documentation in the doc directory.
