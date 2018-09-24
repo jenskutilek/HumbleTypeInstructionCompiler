@@ -80,4 +80,52 @@ def toFontforge(sourceFile, font):
 			raise
 
 
+def toFontTools(sourceFile, font):
+	from fontTools import ttLib
+	from fontTools.ttLib.tables._g_a_s_p import GASP_SYMMETRIC_GRIDFIT, GASP_SYMMETRIC_SMOOTHING, GASP_DOGRAY, GASP_GRIDFIT
+	data = parseFile(sourceFile)
+	translator = BinaryTranslator()
+
+	if data.gasp:
+		gasp = ttLib.newTable("gasp")
+		gasp.gaspRange = {}
+		for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
+			flags = 0
+			if doGridfit    : flags |= GASP_GRIDFIT
+			if doGray       : flags |= GASP_DOGRAY
+			if symSmoothing : flags |= GASP_SYMMETRIC_SMOOTHING
+			if symGridfit   : flags |= GASP_SYMMETRIC_GRIDFIT
+			gasp.gaspRange[size] = flags
+		gasp.version = 1
+		font["gasp"] = gasp
+		font["gasp"].compile(font)
+
+	for name, value in data.maxp.items():
+		if name == "maxStackElements" : font["maxp"].maxStackElements = value
+		if name == "maxFunctionDefs"  : font["maxp"].maxFunctionDefs = value
+		if name == "maxStorage"       : font["maxp"].maxStorage = value
+		if name == "maxZones"         : font["maxp"].maxZones = value
+		if name == "maxTwilightPoints": font["maxp"].maxTwilightPoints = value
+
+	if data.cvt:
+		cvt = ttLib.newTable("cvt ")
+		cvt.values = data.cvt
+		font["cvt "] = cvt
+
+	if data.fpgm:
+		fpgm = ttLib.newTable("fpgm")
+		font["fpgm"].program.fromBytecode(translator.translate(data.fpgm))
+
+	if data.prep:
+		fpgm = ttLib.newTable("prep")
+		font["prep"].program.fromBytecode(translator.translate(data.prep))
+
+	for name, block in data.glyphs.items():
+		try:
+			font["glyf"][str(name)].program.fromBytecode(translator.translate(block))
+		except Exception:
+			print("Error with glyph: " + name)
+			raise
+
+
 # EXTEND Add to* function for new target type
