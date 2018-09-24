@@ -30,6 +30,7 @@ The following `to*()` functions are available:
 ```
 htic.toConsole(sourceFile)
 htic.toFontforge(sourceFile, font)
+htic.toFontTools(sourceFile, font)
 ```
 
 
