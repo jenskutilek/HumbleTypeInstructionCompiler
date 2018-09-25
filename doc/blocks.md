@@ -12,7 +12,6 @@ gasp
 
 This block represents the [gasp] table, version 1. Each line starts
 with a size, followed by optional flags that apply up to that size.
-[gasp]: http://www.microsoft.com/typography/otspec/gasp.htm
 
 ```
 gasp
@@ -28,7 +27,8 @@ maxp
 
 This block represents the [maxp] table. Each line starts with a value,
 followed by its identifier. The example lists all supported identifiers.
-[maxp]: http://www.microsoft.com/typography/otspec/maxp.htm
+Note that the compiler cannot currently validate the values, the user is
+responsible for their correctness.
 
 ```
 maxp
@@ -47,7 +47,6 @@ cvt
 
 This block represents the [cvt] table. Each line starts with
 a control value, followed by its identifier.
-[cvt]: http://www.microsoft.com/typography/otspec/cvt.htm
 
 ```
 cvt
@@ -83,8 +82,6 @@ Instruction blocks
 Humble type instructions for the [fpgm] and [prep] tables are placed
 in blocks with the corresponding name. Glyph instructions are placed
 in a block with the name of the glyph, as defined by the font.
-[fpgm]: http://www.microsoft.com/typography/otspec/fpgm.htm
-[prep]: http://www.microsoft.com/typography/otspec/prep.htm
 
 ```
 fpgm
@@ -107,3 +104,10 @@ asciitilde
   MDAP+r 0
 }
 ```
+
+
+[gasp]: http://www.microsoft.com/typography/otspec/gasp.htm
+[maxp]: http://www.microsoft.com/typography/otspec/maxp.htm
+[cvt]:  http://www.microsoft.com/typography/otspec/cvt.htm
+[fpgm]: http://www.microsoft.com/typography/otspec/fpgm.htm
+[prep]: http://www.microsoft.com/typography/otspec/prep.htm

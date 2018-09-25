@@ -1,34 +1,33 @@
 Grammar
 =======
 
-The following [ABNF] grammar describes the compiler input format.
-In addition to the official grammar syntax, 'single quotes' denote
-case-sensitive strings.
-
-[ABNF]: https://en.wikipedia.org/wiki/ABNF
+The following [ABNF](https://en.wikipedia.org/wiki/ABNF) grammar
+describes the compiler input format. In addition to the official
+grammar syntax, 'single quotes' denote case-sensitive strings.
 
 
-Main structure
+Main Structure
 --------------
 
 ```
  root = [flags] [gasp] [maxp] [cvt] [fpgm] [prep] *glyph
- gasp = 'gasp' open *(ws uint *(s gaspflag) nl) close
- maxp = 'maxp' open *(ws uint s maxpname nl) close
-  cvt = 'cvt' open *(ws num s id nl) close
-flags = 'flags' open *(ws id s bits nl) close
+ gasp = 'gasp' open *(os uint *(s gaspflag) nl) close
+ maxp = 'maxp' open *(os uint s maxpname nl) close
+  cvt = 'cvt' open *(os num s id nl) close
+flags = 'flags' open *(os id s bits nl) close
  fpgm = 'fpgm' block
  prep = 'prep' block
 glyph = id block
 ```
 
+
 Block Structure
 ---------------
 
 ```
-    block = open *(block / (ws instr nl)) close
-     open = ws '{' ws
-    close = ws '}' ws
+    block = open *(block / (os instr nl)) close
+     open = os '{' os
+    close = os '}' os
 
     instr = instrname flag *(s arg)
      flag = ['[' flagval ']']
@@ -38,13 +37,14 @@ Block Structure
 operation = val s operator s val
 ```
 
+
 Terminals
 ---------
 
 ```
         s = 1*WSP                  ; Mandatory space
        nl = *(LWSP / comment) CRLF ; Mandatory newline
-       ws = *(LWSP / comment CRLF) ; Optional whitespace
+       os = *(LWSP / comment CRLF) ; Optional whitespace
   comment = '#' *(VCHAR / WSP)
 
        id = 1*(ALPHA / DIGIT / '_' / '.')
@@ -98,6 +98,7 @@ instr =/ 'MIAP' flag s val s id
        / 'LOOPCALL' s val s id *(s arg)
 ```
 
+
 Custom Instructions
 -------------------
 
@@ -107,6 +108,7 @@ instr =/ 'push' 1*(s num)
        / 'deltap' s val 1*(s delta)
        / 'void' s uint s id *(s param)
 ```
+
 
 Unsupported Instructions
 ------------------------

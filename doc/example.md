@@ -41,7 +41,7 @@ Now consider these outlines:
 ```
 
 The code on the left shows an exemplary instruction of the outlines.
-It is then compiled into the TrueType instructions on the right.
+It is then compiled into the TrueType program on the right.
 Note that the compiler collects all arguments, maps them to the
 correct indices, and pushes them in a single call:
 

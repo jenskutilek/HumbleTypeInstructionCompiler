@@ -26,7 +26,7 @@ Flags
 As established by the standard, instruction flags are enclosed
 in square brackets and directly appended to instruction names.
 They can be written in binary form, or as an alias from the
-`flags` block (see BLOCKS.md). Omitted flags default to zero.
+`flags` [block][blocks.md]. Omitted flags default to zero.
 
 ```
 SVTCA    | SVTCA[0]
@@ -76,9 +76,9 @@ representing f26dot6, or signed decimals with a colon representing
 f2dot14. Decimals are rounded when necessary.
 
 ```
-SMD 0x60        | PUSHB[000]
-SMD 0b1100000   |  96
-SMD 96          | SMD
+SMD 0x60        | PUSHB[100]
+SMD 0b1100000   |  96  96  96  96  96
+SMD 96          | SMD SMD SMD SMD SMD
 SMD 1.5         |
 SMD 0:005859375 |
 ```
@@ -145,7 +145,7 @@ A parameter must begin with `val`, `pt`, `cvt`, `func`, or `stor`
 to declare its type, which is either a numerical value, point number,
 control value identifier, function identifier, or storage identifier
 respectively. Additional characters can be appended to a parameter name
-to make it more legible.
+to make it more expressive.
 
 ```
 FDEF 9 interpol pt pt1 pt2 | PUSHB[000]
@@ -205,10 +205,10 @@ LOOPCALL 2 align 8 6 |  8 31
 Void Functions
 --------------
 
-Because functions can potentially push values onto the stack,
-the compiler normally does not consolidate push instruction accross
-`CALL` instructions. However, if a function does not push more values
-than it consumes, it can be declared with the `void` instruction
+Because functions can push values onto the stack, the compiler does not
+consolidate push instruction accross `CALL` instructions. However, if a
+function consumes all its arguments and does not influence the stack for
+subsequent instructions, it can be declared with the `void` instruction
 instead of `FDEF`, to enable a more aggressive optimization.
 
 ```

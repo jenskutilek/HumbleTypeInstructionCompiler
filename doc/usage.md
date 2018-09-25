@@ -1,5 +1,5 @@
-Compilation
-===========
+Usage
+=====
 
 The compiler is implemented in Python, to integrate it directly into
 existing build scripts. It is intended to work with Python 2.7 and 3.
