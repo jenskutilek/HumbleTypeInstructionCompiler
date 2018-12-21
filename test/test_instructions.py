@@ -214,11 +214,13 @@ class PushTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0x40,9,1,2,3,4,5,6,7,8,9]))
 
 	def testNPUSHB256(self):
+		# First 255 args (accumulated)
 		code = "push"
 		expected = bytearray([0x40, 255])
 		for i in range(255):
 			code += " 1"
 			expected.append(1)
+		# Trailing arg
 		code += " 2"
 		expected.append(0xB0)
 		expected.append(2)

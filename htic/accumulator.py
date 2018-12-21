@@ -12,41 +12,36 @@ class Accumulator:
 		self.cache.append(argument)
 
 	def flush(self):
-		length = len(self.cache)
-		current = 0
-		while current < length:
-			# Look for sequence of bytes or words
-			writingBytes = isByte(self.cache[current])
-			peek = current + 1
-			while peek < min(length, current+255):
-				if isByte(self.cache[peek]) == writingBytes:
-					peek += 1
-				else:
-					break
+		def getArgSize(arg):
+			return 1 if 0 <= arg <= 255 else 2
 
-			# Add correct instruction
-			count = peek - current
+		while self.cache:
+			count = 1
+			limit = min(len(self.cache), 255)
+			argSize = getArgSize(self.cache[0])
+
+			# Accumulate as many same-sized arguments as possible
+			while count < limit and getArgSize(self.cache[count]) == argSize:
+				count += 1
+
+			# Write instruction
 			if count <= 8:
-				if writingBytes:
+				if argSize == 1:
 					self.writer.writeInstruction("PUSHB", 0xB0, count-1, 7)
 				else:
 					self.writer.writeInstruction("PUSHW", 0xB8, count-1, 7)
 			else:
-				if writingBytes:
+				if argSize == 1:
 					self.writer.writeInstruction("NPUSHB", 0x40, 0, 0)
 				else:
 					self.writer.writeInstruction("NPUSHW", 0x41, 0, 0)
 				self.writer.writeByte(count)
 
-			# Add values
-			while current < peek:
-				if writingBytes:
-					self.writer.writeByte(self.cache[current])
+			# Write arguments
+			for arg in self.cache[:count]:
+				if argSize == 1:
+					self.writer.writeByte(arg)
 				else:
-					self.writer.writeWord(self.cache[current])
-				current += 1
-		self.cache = []
+					self.writer.writeWord(arg)
 
-
-def isByte(value):
-	return value >= 0 and value < 256
+			self.cache = self.cache[count:]
