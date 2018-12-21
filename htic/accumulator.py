@@ -1,4 +1,4 @@
-class Accumulator(object):
+class Accumulator:
 
 	def __init__(self, writer):
 		self.writer = writer

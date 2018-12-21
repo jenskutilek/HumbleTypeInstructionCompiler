@@ -1,14 +1,14 @@
 Usage
 =====
 
-The compiler is implemented in Python, to integrate it directly into
-existing build scripts. It is intended to work with Python 2.7 and 3.
+The compiler is implemented in Python 3, to integrate
+it directly into existing Python-based build scripts.
 
 
 Interface
 ---------
 
-Add the `htic` directory to `PYTHONPATH`, so that python can find it.
+Install the `htic` package via pip, or use the provided `setup.py`.
 Then import `htic` and call the appropriate `to*()` function:
 
 ```

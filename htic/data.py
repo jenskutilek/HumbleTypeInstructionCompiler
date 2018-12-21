@@ -1,8 +1,7 @@
-from __future__ import absolute_import
 from .error import HumbleError
 
 
-class Data(object):
+class Data:
 	"""Manage parsed data"""
 
 	def __init__(self):
@@ -25,6 +24,7 @@ class Data(object):
 		self.glyphs = {}
 		"""{string name : Block block}"""
 
+		# Private
 		self.__cvtLookup = {}
 		self.__functionLookup = {}
 		self.__functionRecipeLookup = {}

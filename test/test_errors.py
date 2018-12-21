@@ -1,9 +1,7 @@
-from __future__ import absolute_import
+import unittest
 
 from . import helper
 from htic.error import HumbleError
-
-import unittest
 
 
 class ParserError(unittest.TestCase):

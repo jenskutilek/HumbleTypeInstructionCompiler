@@ -1,4 +1,4 @@
-class Writer(object):
+class Writer:
 
 	def writeInstruction(name, opCode, flags, maxFlag):
 		"""string, int, int, int"""

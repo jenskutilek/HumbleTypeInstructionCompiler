@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import io
 from math import ceil
 from math import log
@@ -37,7 +35,7 @@ class StringTranslator(Writer):
 		self.stream = None
 
 	def translate(self, block):
-		self.stream = io.BytesIO() # Instead of StringIO.StringIO
+		self.stream = io.StringIO()
 		block.write(self)
 		return self.stream.getvalue()
 

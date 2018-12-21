@@ -1,8 +1,7 @@
-from __future__ import absolute_import
 from .accumulator import Accumulator
 
 
-class Block(object):
+class Block:
 
 	def __init__(self):
 		self.last = None

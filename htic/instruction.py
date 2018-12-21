@@ -1,11 +1,9 @@
-from __future__ import absolute_import
-
 from .argument import IntegerArgument
 from .block import Block
 from .error import HumbleError
 
 
-class Instruction(object):
+class Instruction:
 
 	@staticmethod
 	def newInstruction(name):

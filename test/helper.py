@@ -10,7 +10,8 @@ FPGMPARAMS = "fpgm{ FDEF 0 func0 val pt cvt func stor \n POP \n POP \n POP \n PO
 
 def getData(code):
 	parser = htic.parser.Parser()
-	return parser.parse(io.BytesIO(code))
+	stream = io.StringIO(code)
+	return parser.parse(stream)
 
 
 def toBytes(instructions, precode="", name="A"):

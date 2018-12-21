@@ -1,7 +1,7 @@
 import re
 
 
-class Tokenizer(object):
+class Tokenizer:
 
 	def __init__(self, stream):
 		self.stream = stream

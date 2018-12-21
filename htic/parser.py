@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-
-import io
 import re
 
 from .argument import IntegerArgument
@@ -13,12 +10,12 @@ from .tokenizer import Tokenizer
 
 
 def parseFile(sourceFile):
-	with io.open(sourceFile) as stream:
+	with open(sourceFile) as stream:
 		parser = Parser()
 		return parser.parse(stream)
 
 
-class Parser(object):
+class Parser:
 
 	def __init__(self):
 		self.tokenizer = None

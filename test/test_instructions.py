@@ -1,8 +1,6 @@
-from __future__ import absolute_import
+import unittest
 
 from . import helper
-
-import unittest
 
 
 class FlagTest(unittest.TestCase):

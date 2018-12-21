@@ -1,8 +1,6 @@
-from __future__ import absolute_import
+import unittest
 
 from . import helper
-
-import unittest
 
 
 class GaspTest(unittest.TestCase):
@@ -82,8 +80,8 @@ class FpgmPrepTest(unittest.TestCase):
 
 	def testFpgmEmpty(self):
 		code = helper.toBytes("", "", "fpgm")
-		self.assertEqual(code, "")
+		self.assertEqual(code, b"")
 
 	def testPrepEmpty(self):
 		code = helper.toBytes("", "", "prep")
-		self.assertEqual(code, "")
+		self.assertEqual(code, b"")

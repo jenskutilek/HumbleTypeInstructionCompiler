@@ -1,4 +1,4 @@
-class Argument(object):
+class Argument:
 
 	def canChain(self):
 		return False
