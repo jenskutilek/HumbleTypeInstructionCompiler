@@ -11,10 +11,10 @@ Main Structure
 
 ```
  root = [flags] [gasp] [maxp] [cvt] [fpgm] [prep] *glyph
- gasp = 'gasp' open *(os uint *(s gaspflag) nl) close
- maxp = 'maxp' open *(os uint s maxpname nl) close
-  cvt = 'cvt' open *(os num s id nl) close
-flags = 'flags' open *(os id s bits nl) close
+ gasp = 'gasp' open *(ws uint *(s gaspflag) nl) close
+ maxp = 'maxp' open *(ws uint s maxpname nl) close
+  cvt = 'cvt' open *(ws num s id nl) close
+flags = 'flags' open *(ws id s bits nl) close
  fpgm = 'fpgm' block
  prep = 'prep' block
 glyph = id block
@@ -25,9 +25,9 @@ Block Structure
 ---------------
 
 ```
-    block = open *(block / (os instr nl)) close
-     open = os '{' os
-    close = os '}' os
+    block = open *(ws instr nl) close
+     open = ws '{' ws
+    close = ws '}' ws
 
     instr = instrname flag *(s arg)
      flag = ['[' flagval ']']
@@ -44,7 +44,7 @@ Terminals
 ```
         s = 1*WSP                  ; Mandatory space
        nl = *(LWSP / comment) CRLF ; Mandatory newline
-       os = *(LWSP / comment CRLF) ; Optional whitespace
+       ws = *(LWSP / comment CRLF) ; Optional whitespace
   comment = '#' *(VCHAR / WSP)
 
        id = 1*(ALPHA / DIGIT / '_' / '.')

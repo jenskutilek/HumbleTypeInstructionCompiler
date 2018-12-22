@@ -315,26 +315,3 @@ class ScopeTest(unittest.TestCase):
 	def testFunctionScope(self):
 		code = helper.toBytes("FDEF 0 f0 \n IF 2 \n MDAP 5 \n MDAP 6 \n EIF \n ENDF \n FDEF 1 f1 \n POP \n ENDF", "", "fpgm")
 		self.assertEqual(code, bytearray([0xB1,1,0,0x2C,0xB0,2,0x58,0xB1,6,5,0x2E,0x2E,0x59,0x2D,0x2C,0x21,0x2D]))
-
-
-class SubBlockTest(unittest.TestCase):
-
-	def testSubBlock(self):
-		code = helper.toBytes("MDAP 4 \n { \n MDAP 5 \n }")
-		self.assertEqual(code, bytearray([0xB0,4,0x2E,0xB0,5,0x2E]))
-
-	def testSubBlockConsolidation(self):
-		code = helper.toBytes("MDAP 3 \n MDAP 4 \n { \n MDAP 5 \n MDAP 6 \n }")
-		self.assertEqual(code, bytearray([0xB1,4,3,0x2E,0x2E,0xB1,6,5,0x2E,0x2E]))
-
-	def testSubBlockOuterConsolidation(self):
-		code = helper.toBytes("MDAP 4 \n { \n MDAP 5 \n } \n MDAP 6")
-		self.assertEqual(code, bytearray([0xB1,6,4,0x2E,0xB0,5,0x2E,0x2E]))
-
-	def testSubBlockSequence(self):
-		code = helper.toBytes("MDAP 4 \n { \n MDAP 5 \n } \n { \n MDAP 6 \n }")
-		self.assertEqual(code, bytearray([0xB0,4,0x2E,0xB0,5,0x2E,0xB0,6,0x2E]))
-
-	def testSubSubBlock(self):
-		code = helper.toBytes("MDAP 3 \n { \n MDAP 4 \n MDAP 5 \n { \n MDAP 6 \n MDAP 7 \n } \n } \n MDAP 8")
-		self.assertEqual(code, bytearray([0xB1,8,3,0x2E,0xB1,5,4,0x2E,0x2E,0xB1,7,6,0x2E,0x2E,0x2E]))

@@ -130,14 +130,9 @@ class Parser:
 		block = Block()
 		self.__open()
 		while self.tokenizer.peek() != "}":
-			if self.tokenizer.peek() == "{":
-				subblock = self.__block()
-				instruction = Instruction.newSubBlockInstruction(subblock)
-				block.add(instruction)
-			else:
-				self.__ws()
-				block.add(self.__instr())
-				self.__nl()
+			self.__ws()
+			block.add(self.__instr())
+			self.__nl()
 		self.__close()
 		return block
 
@@ -157,6 +152,118 @@ class Parser:
 		instruction.setFlag(self.__flag())
 		self.__recipe(instruction)
 		return instruction
+
+	def __flag(self):
+		flag = 0
+		if self.tokenizer.peek() == "[":
+			self.__skip("[")
+			flag = self.__flagval()
+			self.__skip("]")
+		return flag
+
+	def __flagval(self):
+		try:
+			self.tokenizer.mark()
+			return self.__bits()
+		except HumbleError:
+			self.tokenizer.rewind()
+			name = self.__id()
+			return self.data.getFlagValue(name)
+		finally:
+			self.tokenizer.unmark()
+
+	def __val(self):
+		if self.tokenizer.peek() == "(":
+			self.__skip("(")
+			try:
+				self.tokenizer.mark()
+				val = self.__instr()
+			except HumbleError:
+				self.tokenizer.rewind()
+				val = self.__operation()
+			finally:
+				self.tokenizer.unmark()
+			self.__skip(")")
+			return val
+		else:
+			return self.__num()
+
+	def __operation(self):
+		argument = self.__val()
+		instruction = Instruction.newOperationInstruction(self.tokenizer.get())
+		instruction.add(argument)
+		argument = self.__val()
+		instruction.add(argument)
+		return instruction
+
+	def __nl(self):
+		self.__skip("\n")
+		self.__ws()
+
+	def __ws(self):
+		while self.tokenizer.peek() == "\n":
+			self.tokenizer.get()
+
+	def __id(self):
+		token = self.tokenizer.get()
+		if re.match("[0-9A-Za-z_\.]+$", token):
+			return token
+		else:
+			raise HumbleError("Invalid identifier: {}".format(token))
+
+	def __num(self):
+		token = self.tokenizer.get()
+		if token == "+" or token == "-":
+			token += self.tokenizer.get()
+		try:
+			if token.find("0x") == 0 or token.find("0b") == 0:
+				value = int(token, 0)
+				if value >= 2**15 and value < 2**16:
+					value -= 2**16
+			elif token.find(":") >= 0:
+				value = int(round(float(token.replace(":", ".")) * 2**14))
+			elif token.find(".") >= 0:
+				value = int(round(float(token) * 2**6))
+			else:
+				value = int(token)
+
+			if value >= -2**15 and value < 2**15:
+				return IntegerArgument(value)
+		except ValueError:
+			pass
+		raise HumbleError("Invalid numeric argument: {}".format(token))
+
+	def __uint(self):
+		token = self.tokenizer.get()
+		try:
+			value = int(token)
+			if value >= 0 and value < 2**16:
+				return value
+		except ValueError:
+			pass
+		raise HumbleError("Invalid unsigned integer: {}".format(token))
+
+	def __bits(self):
+		token = self.tokenizer.get()
+		try:
+			return int(token, 2)
+		except ValueError:
+			raise HumbleError("Invalid bit value: {}".format(token))
+
+	def __delta(self):
+		ppemToken = self.tokenizer.get()
+		signToken = self.tokenizer.get()
+		stepsToken = self.tokenizer.get()
+		try:
+			ppem = int(ppemToken)
+			steps = int(signToken + stepsToken)
+			if ppem >= 0 and ppem < 2**15 and steps != 0 and abs(steps) <= 8:
+				return DeltaArgument(ppem, steps)
+		except ValueError:
+			pass
+		raise HumbleError("Invalid delta modifier: {}{}{}".format(ppemToken, signToken, stepsToken))
+
+	# Helper methods
 
 	def __recipe(self, instruction):
 		if self.tokenizer.peek() == "\n" or \
@@ -235,116 +342,6 @@ class Parser:
 		elif token.startswith("stor"): return 'getSTOR'
 		else:
 			raise HumbleError("Invalid parameter: {}".format(token))
-
-	def __flag(self):
-		flag = 0
-		if self.tokenizer.peek() == "[":
-			self.__skip("[")
-			flag = self.__flagval()
-			self.__skip("]")
-		return flag
-
-	def __flagval(self):
-		try:
-			self.tokenizer.mark()
-			return self.__bits()
-		except HumbleError:
-			self.tokenizer.rewind()
-			name = self.__id()
-			return self.data.getFlagValue(name)
-		finally:
-			self.tokenizer.unmark()
-
-	def __val(self):
-		if self.tokenizer.peek() == "(":
-			self.__skip("(")
-			try:
-				self.tokenizer.mark()
-				val = self.__instr()
-			except HumbleError:
-				self.tokenizer.rewind()
-				val = self.__operation()
-			finally:
-				self.tokenizer.unmark()
-			self.__skip(")")
-			return val
-		else:
-			return self.__num()
-
-	def __operation(self):
-		argument = self.__val()
-		instruction = Instruction.newOperationInstruction(self.tokenizer.get())
-		instruction.add(argument)
-		argument = self.__val()
-		instruction.add(argument)
-		return instruction
-
-	def __nl(self):
-		self.__skip("\n")
-		self.__ws()
-
-	def __ws(self):
-		while self.tokenizer.peek() == "\n":
-			self.tokenizer.get()
-
-	def __uint(self):
-		token = self.tokenizer.get()
-		try:
-			value = int(token)
-			if value >= 0 and value < 2**16:
-				return value
-		except ValueError:
-			pass
-		raise HumbleError("Invalid unsigned integer: {}".format(token))
-
-	def __num(self):
-		token = self.tokenizer.get()
-		if token == "+" or token == "-":
-			token += self.tokenizer.get()
-		try:
-			if token.find("0x") == 0 or token.find("0b") == 0:
-				value = int(token, 0)
-				if value >= 2**15 and value < 2**16:
-					value -= 2**16
-			elif token.find(":") >= 0:
-				value = int(round(float(token.replace(":", ".")) * 2**14))
-			elif token.find(".") >= 0:
-				value = int(round(float(token) * 2**6))
-			else:
-				value = int(token)
-
-			if value >= -2**15 and value < 2**15:
-				return IntegerArgument(value)
-		except ValueError:
-			pass
-		raise HumbleError("Invalid numeric argument: {}".format(token))
-
-	def __delta(self):
-		ppemToken = self.tokenizer.get()
-		signToken = self.tokenizer.get()
-		stepsToken = self.tokenizer.get()
-		try:
-			ppem = int(ppemToken)
-			steps = int(signToken + stepsToken)
-			if ppem >= 0 and ppem < 2**15 and steps != 0 and abs(steps) <= 8:
-				return DeltaArgument(ppem, steps)
-		except ValueError:
-			pass
-		raise HumbleError("Invalid delta modifier: {}{}{}".format(ppemToken, signToken, stepsToken))
-
-	def __bits(self):
-		token = self.tokenizer.get()
-		try:
-			return int(token, 2)
-		except ValueError:
-			raise HumbleError("Invalid bit value: {}".format(token))
-
-	def __id(self):
-		token = self.tokenizer.get()
-		if re.match("[0-9A-Za-z_\.]+$", token):
-			return token
-		else:
-			raise HumbleError("Invalid identifier: {}".format(token))
 
 	def __skip(self, string):
 		token = self.tokenizer.get()

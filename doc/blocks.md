@@ -69,7 +69,7 @@ starts with an alias, followed by the corresponding binary value.
 flags
 {
   x    1
-  rnd  1
+  r    1
   stem 01101
   pMRB 01101
 }
@@ -101,7 +101,7 @@ prep
 asciitilde
 {
   CALL setRoundState
-  MDAP+r 0
+  MDAP[r] 0
 }
 ```
 

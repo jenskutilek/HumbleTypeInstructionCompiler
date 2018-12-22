@@ -124,12 +124,6 @@ class Instruction:
 			raise HumbleError("Unsupported instruction: {}".format(name))
 
 	@staticmethod
-	def newSubBlockInstruction(block):
-		instruction = SubBlockInstruction()
-		instruction.block = block
-		return instruction
-
-	@staticmethod
 	def newOperationInstruction(symbol):
 		if   symbol == "==": return Instruction.newInstruction("EQ")
 		elif symbol == "!=": return Instruction.newInstruction("NEQ")
@@ -360,14 +354,3 @@ class LoopInstruction(Instruction):
 		args = len(self.arguments)
 		for _ in range(args if args and args < self.LIMIT else 1):
 			Instruction._writeName(self, accumulator)
-
-
-class SubBlockInstruction(Instruction):
-
-	def __init__(self):
-		Instruction.__init__(self, None, None, None, (), False)
-		self.block = Block()
-
-	def write(self, accumulator):
-		Instruction.write(self, accumulator)
-		self.block.write(accumulator.writer)

@@ -238,24 +238,3 @@ deltap 8 11+2 29-6 | PUSHB[110]
                    | DELTAP2
 
 ```
-
-
-Subblocks
----------
-
-A subblock suspends the current argument consolidation and starts
-a new one within its scope. It can be used to limit the number of
-arguments pushed at once, thus avoiding the infamous stack overflow.
-Subblocks are enclosed with `{}`.
-
-```
-UTP 1  | PUSHB[010]
-UTP 2  |  5 2 1
-{      | UTP
-  IP 3 | UTP
-  IP 4 | PUSHB[001]
-}      |  4 3
-UTP 5  | IP
-       | IP
-       | UTP
-```
