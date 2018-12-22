@@ -16,7 +16,7 @@ class FlagTest(unittest.TestCase):
 		self.assertEqual(code, FlagTest.EXPECTED)
 
 	def testAliasBrackets(self):
-		code = helper.toBytes("MDRP[m] 8 \n IUP[x]", helper.FLAGS)
+		code = helper.toBytes("MDRP[m] 8 \n IUP[x]", "flags{ x 1 \n m 11110 \n}")
 		self.assertEqual(code, FlagTest.EXPECTED)
 
 
@@ -117,11 +117,11 @@ class CommentTest(unittest.TestCase):
 class IdentifierTest(unittest.TestCase):
 
 	def testCvt(self):
-		code = helper.toBytes("MIAP 8 cvt1 \n MIAP 8 cvt2", helper.CVT)
-		self.assertEqual(code, bytearray([0xB3,8,2,8,1,0x3E,0x3E]))
+		code = helper.toBytes("MIAP 8 cvt0 \n MIAP 8 cvt1", "cvt{ 0 cvt0 \n 10 cvt1 \n}")
+		self.assertEqual(code, bytearray([0xB3,8,1,8,0,0x3E,0x3E]))
 
 	def testFunction(self):
-		code = helper.toBytes("CALL func0 8 \n CALL func1 9", helper.FPGM)
+		code = helper.toBytes("CALL func0 8 \n CALL func1 9", "fpgm{ FDEF 0 func0 val \n POP \n ENDF \n FDEF 1 func1 val \n POP \n ENDF \n}")
 		self.assertEqual(code, bytearray([0xB1,8,0,0x2B,0xB1,9,1,0x2B]))
 
 	def testStorageNew(self):
@@ -259,16 +259,18 @@ class PushTest(unittest.TestCase):
 class CallTest(unittest.TestCase):
 
 	def testCALL(self):
-		code = helper.toBytes("CALL func1 2", helper.FPGM)
+		code = helper.toBytes("CALL func1 2", "fpgm{ FDEF 1 func1 val \n POP \n ENDF \n}")
 		self.assertEqual(code, bytearray([0xB1,2,1,0x2B]))
 
 	def testLOOPCALL(self):
-		code = helper.toBytes("LOOPCALL 3 func1 2 4 6", helper.FPGM)
+		code = helper.toBytes("LOOPCALL 3 func1 2 4 6", "fpgm{ FDEF 1 func1 val \n POP \n ENDF \n}")
 		self.assertEqual(code, bytearray([0xB4,2,4,6,3,1,0x2A]))
 
 	def testParameters(self):
-		code = helper.toBytes("WS stor0 7 \n CALL func0 0.25 8 cvt1 func0 stor0", helper.CVT + helper.FPGMPARAMS)
-		self.assertEqual(code, bytearray([0xB7,16,8,1,0,0,0,0,7,0x42,0x2B]))
+		code = helper.toBytes("WS stor0 7 \n CALL func0 0.25 8 cvt0 func0 stor0",
+			"cvt{ 0 cvt0 \n}" +
+			"fpgm{ FDEF 0 func0 val pt cvt func stor \n POP \n POP \n POP \n POP \n POP \n ENDF \n}")
+		self.assertEqual(code, bytearray([0xB7,16,8,0,0,0,0,0,7,0x42,0x2B]))
 
 
 class DeltaTest(unittest.TestCase):
@@ -278,7 +280,7 @@ class DeltaTest(unittest.TestCase):
 		self.assertEqual(code, bytearray([0x40,10,0x00,1,0x17,1,0x28,1,0x3f,1,4,6,0x5E,0x5D]))
 
 	def testDeltacVariants(self):
-		code = helper.toBytes("deltac cvt0 6-8 21+8 22-8 37+8 38-8 53+8", helper.CVT)
+		code = helper.toBytes("deltac cvt0 6-8 21+8 22-8 37+8 38-8 53+8", "cvt{ 0 cvt0 \n}")
 		self.assertEqual(code, bytearray([0x40,16,0x00,0,0xff,0,2,0x00,0,0xff,0,2,0x00,0,0xff,0,2,6,0x5E,0x73,0x74,0x75]))
 
 	def testDeltapVariants(self):
