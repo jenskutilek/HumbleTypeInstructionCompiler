@@ -16,10 +16,9 @@ def getData(code):
 
 def toBytes(instructions, precode="", name="A"):
 	data = getData(precode + name + "{" + instructions + "\n}")
-	translator = htic.translator.BinaryTranslator()
 	if name == "prep":
-		return translator.translate(data.prep)
+		return bytes(data.prep)
 	elif name == "fpgm":
-		return translator.translate(data.fpgm)
+		return bytes(data.fpgm)
 	else:
-		return translator.translate(data.glyphs[name])
+		return bytes(data.glyphs[name])

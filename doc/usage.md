@@ -47,8 +47,7 @@ the sourcefile name to `parser.parseFile()`, which returns a
 `Data` object. This object contains all parsed data in a neutral
 format, which can then be written into the font object.
 
-Parsed instruction blocks are represented by `Block` objects.
-These objects can be converted to the desired format with a
-`Translator`. Currently, two translator types are available:
-`BinaryTranslator` converts blocks to binary TrueType code,
-while `StringTranslator` converts blocks to plain-text strings.
+Parsed instruction blocks (`fpgm`, `prep`, or glyph instructions)
+are represented by `Block` objects. Blocks can be converted to
+human-readable strings with `str(block)` for debugging, or to
+binary TrueType code with `bytes(block)`.

@@ -1,11 +1,8 @@
 from .parser import parseFile
-from .translator import BinaryTranslator
-from .translator import StringTranslator
 
 
 def toConsole(sourceFile):
 	data = parseFile(sourceFile)
-	translator = StringTranslator()
 
 	print("-------- gasp --------")
 	for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
@@ -18,7 +15,7 @@ def toConsole(sourceFile):
 
 	print("-------- maxp --------")
 	for name, value in data.maxp.items():
-		print("{} {}".format(name, value))
+		print(name, value)
 
 	print("-------- cvt ---------")
 	if data.cvt:
@@ -26,20 +23,19 @@ def toConsole(sourceFile):
 
 	print("-------- fpgm --------")
 	if data.fpgm:
-		print(translator.translate(data.fpgm))
+		print(str(data.fpgm))
 
 	print("-------- prep --------")
 	if data.prep:
-		print(translator.translate(data.prep))
+		print(str(data.prep))
 
 	for name, block in data.glyphs.items():
 		print("--------", name, "--------")
-		print(translator.translate(block))
+		print(str(block))
 
 
 def toFontforge(sourceFile, font):
 	data = parseFile(sourceFile)
-	translator = BinaryTranslator()
 
 	if data.gasp:
 		gasp = []
@@ -64,14 +60,14 @@ def toFontforge(sourceFile, font):
 		font.cvt = data.cvt
 
 	if data.fpgm:
-		font.setTableData("fpgm", translator.translate(data.fpgm))
+		font.setTableData("fpgm", bytes(data.fpgm))
 
 	if data.prep:
-		font.setTableData("prep", translator.translate(data.prep))
+		font.setTableData("prep", bytes(data.prep))
 
 	for name, block in data.glyphs.items():
 		try:
-			font[str(name)].ttinstrs = translator.translate(block)
+			font[str(name)].ttinstrs = bytes(block)
 		except Exception:
 			print("Error with glyph: " + name)
 			raise
@@ -81,7 +77,6 @@ def toFontTools(sourceFile, font):
 	from fontTools import ttLib
 	from fontTools.ttLib.tables._g_a_s_p import GASP_SYMMETRIC_GRIDFIT, GASP_SYMMETRIC_SMOOTHING, GASP_DOGRAY, GASP_GRIDFIT
 	data = parseFile(sourceFile)
-	translator = BinaryTranslator()
 
 	if data.gasp:
 		gasp = ttLib.newTable("gasp")
@@ -111,15 +106,15 @@ def toFontTools(sourceFile, font):
 
 	if data.fpgm:
 		fpgm = ttLib.newTable("fpgm")
-		font["fpgm"].program.fromBytecode(translator.translate(data.fpgm))
+		font["fpgm"].program.fromBytecode(bytes(data.fpgm))
 
 	if data.prep:
 		fpgm = ttLib.newTable("prep")
-		font["prep"].program.fromBytecode(translator.translate(data.prep))
+		font["prep"].program.fromBytecode(bytes(data.prep))
 
 	for name, block in data.glyphs.items():
 		try:
-			font["glyf"][str(name)].program.fromBytecode(translator.translate(block))
+			font["glyf"][str(name)].program.fromBytecode(bytes(block))
 		except Exception:
 			print("Error with glyph: " + name)
 			raise
