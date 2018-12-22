@@ -4,33 +4,39 @@ from .parser import parseFile
 def toConsole(sourceFile):
 	data = parseFile(sourceFile)
 
-	print("-------- gasp --------")
-	for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
-		line = "{:5d}".format(size)
-		if doGridfit    : line += " doGridfit"
-		if doGray       : line += " doGray"
-		if symSmoothing : line += " symSmoothing"
-		if symGridfit   : line += " symGridfit"
-		print(line)
+	if data.gasp:
+		print("---- gasp ----")
+		for size, doGridfit, doGray, symSmoothing, symGridfit in data.gasp:
+			line = "{:5d}".format(size)
+			if doGridfit    : line += " doGridfit"
+			if doGray       : line += " doGray"
+			if symSmoothing : line += " symSmoothing"
+			if symGridfit   : line += " symGridfit"
+			print(line)
+		print()
 
-	print("-------- maxp --------")
-	for name, value in data.maxp.items():
-		print(name, value)
+	if data.maxp:
+		print("---- maxp ----")
+		for name, value in data.maxp.items():
+			print(name, value)
+		print()
 
-	print("-------- cvt ---------")
 	if data.cvt:
-		print(data.cvt)
+		print("---- cvt ----")
+		for value in data.cvt:
+			print(value)
+		print()
 
-	print("-------- fpgm --------")
 	if data.fpgm:
+		print("---- fpgm ----")
 		print(str(data.fpgm))
 
-	print("-------- prep --------")
 	if data.prep:
+		print("---- prep ----")
 		print(str(data.prep))
 
 	for name, block in data.glyphs.items():
-		print("--------", name, "--------")
+		print("----", name, "----")
 		print(str(block))
 
 
