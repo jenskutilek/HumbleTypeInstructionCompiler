@@ -15,7 +15,7 @@ class Instruction:
 		elif name == "CALL":      return CallInstruction(name, 0x2B, 0, ('CALL',), True, 1)
 		elif name == "CEILING":   return Instruction(name, 0x67, 0, ('getVAL',), True)
 		elif name == "CINDEX":    return Instruction(name, 0x25, 0, ('getVAL',), True)
-		elif name == "CLEAR":     return Instruction(name, 0x22, 0, (), True) # special case for mightPush
+		elif name == "CLEAR":     return Instruction(name, 0x22, 0, (), True)
 		elif name == "DEBUG":     return Instruction(name, 0x4F, 0, ('getVAL',), False)
 		elif name == "deltac":    return DeltaInstruction(name.upper(), None, 0, ('getCVT', 'getDELTA', 'getDELTAS'), False)
 		elif name == "deltap":    return DeltaInstruction(name.upper(), None, 0, ('getVAL', 'getDELTA', 'getDELTAS'), False)
@@ -69,7 +69,7 @@ class Instruction:
 		elif name == "NROUND":    return Instruction(name, 0x6C, 3, ('getVAL',), True)
 		elif name == "ODD":       return Instruction(name, 0x56, 0, ('getVAL',), True)
 		elif name == "OR":        return Instruction(name, 0x5B, 0, ('getVAL', 'getVAL'), True)
-		elif name == "POP":       return Instruction(name, 0x21, 0, (), True) # special case for mightPush
+		elif name == "POP":       return Instruction(name, 0x21, 0, (), True)
 		elif name == "push":      return Instruction(None, None, 0, ('getVALS',), True)
 		elif name == "RCVT":      return Instruction(name, 0x45, 0, ('getCVT',), True)
 		elif name == "RDTG":      return Instruction(name, 0x7D, 0, (), False)
@@ -151,13 +151,13 @@ class Instruction:
 		else:
 			raise NameError(name)
 
-	def __init__(self, name, opCode, maxFlag, recipe, mightPush):
+	def __init__(self, name, opCode, maxFlag, recipe, spoilsStack):
 		self.name = name
 		self.opCode = opCode
 		self.flag = 0
 		self.maxFlag = maxFlag
 		self.recipe = recipe
-		self.mightPush = mightPush
+		self.spoilsStack = spoilsStack
 
 		self.pre = None
 		self.arguments = []
@@ -181,8 +181,8 @@ class Instruction:
 	def canChain(self):
 		return True
 
-	def canPush(self):
-		return self.mightPush or self.pre or (self.post and self.post.canPush())
+	def canSpoilStack(self):
+		return self.spoilsStack or self.pre or (self.post and self.post.canSpoilStack())
 
 	def chain(self, other):
 		if self.pre:
@@ -192,7 +192,7 @@ class Instruction:
 				if argument.canChain():
 					argument.chain(other)
 					return
-			if other.canPush():
+			if other.canSpoilStack():
 				self.pre = other
 			elif self.post:
 				self.post.chain(other)
@@ -215,18 +215,22 @@ class Instruction:
 
 class BlockInstruction(Instruction):
 
-	def __init__(self, name, opCode, maxFlag, recipe, mightPush, stops):
-		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
+	def __init__(self, name, opCode, maxFlag, recipe, spoilsStack, stops):
+		Instruction.__init__(self, name, opCode, maxFlag, recipe, spoilsStack)
 		self.stops = stops
 		self.block = Block()
 
+		# Add an empty instruction with spoilsStack=True,
+		# to disable argument consolidation inside subblocks.
+		# This is necessary because instructions inside the
+		# subblock might use arguments from outside (e.g. FDEF).
+		# In that case, consolidation would mess up the argument order.
+		self.block.add(Instruction(None, None, 0, (), True))
+
 	def canMerge(self, other):
-		if isinstance(self.block.last, BlockInstruction):
-			return True
-		elif self.stops:
-			return other.name not in self.stops
-		else:
-			return False
+		isNested = isinstance(self.block.last, BlockInstruction)
+		isActive = not other.name in self.stops
+		return isNested or isActive
 
 	def merge(self, other):
 		self.block.add(other)
@@ -238,8 +242,8 @@ class BlockInstruction(Instruction):
 
 class CallInstruction(Instruction):
 
-	def __init__(self, name, opCode, maxFlag, recipe, mightPush, insertIndex):
-		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
+	def __init__(self, name, opCode, maxFlag, recipe, spoilsStack, insertIndex):
+		Instruction.__init__(self, name, opCode, maxFlag, recipe, spoilsStack)
 		self.insertIndex = insertIndex
 
 	def add(self, argument):
@@ -251,8 +255,8 @@ class CallInstruction(Instruction):
 
 class DeltaInstruction(Instruction):
 
-	def __init__(self, name, opCode, maxFlag, recipe, mightPush):
-		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
+	def __init__(self, name, opCode, maxFlag, recipe, spoilsStack):
+		Instruction.__init__(self, name, opCode, maxFlag, recipe, spoilsStack)
 		self.target = None
 
 	def add(self, argument):
@@ -323,8 +327,8 @@ class LoopInstruction(Instruction):
 
 	LIMIT = 4
 
-	def __init__(self, name, opCode, maxFlag, recipe, mightPush):
-		Instruction.__init__(self, name, opCode, maxFlag, recipe, mightPush)
+	def __init__(self, name, opCode, maxFlag, recipe, spoilsStack):
+		Instruction.__init__(self, name, opCode, maxFlag, recipe, spoilsStack)
 
 	def canMerge(self, other):
 		return other.name == self.name and other.flag == self.flag and \
