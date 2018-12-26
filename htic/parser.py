@@ -303,7 +303,7 @@ class Parser:
 				if instruction.name == "LOOPCALL":
 					instruction.recipe *= instruction.arguments[-2].value
 				if self.data.isVoidFunction(name):
-					instruction.mightPush = False
+					instruction.spoilsStack = False
 				# Parse new recipe
 				self.__recipe(instruction)
 				return

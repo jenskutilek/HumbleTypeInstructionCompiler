@@ -274,6 +274,10 @@ class CallTest(unittest.TestCase):
 			"fpgm{ FDEF 0 func0 val pt cvt func stor \n POP \n POP \n POP \n POP \n POP \n ENDF \n}")
 		self.assertEqual(code, bytearray([0xB7,16,8,0,0,0,0,0,7,0x42,0x2B]))
 
+	def testVoidCALL(self):
+		code = helper.toBytes("CALL func1 2 \n CALL func1 3", "fpgm{ void 1 func1 val \n POP \n ENDF \n}")
+		self.assertEqual(code, bytearray([0xB3,3,1,2,1,0x2B,0x2B]))
+
 
 class DeltaTest(unittest.TestCase):
 
