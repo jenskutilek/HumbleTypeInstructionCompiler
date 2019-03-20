@@ -1,34 +1,10 @@
 Example
 =======
 
-A more extensive example can be found in the sourcefiles
-of the [Xolonium](https://gitlab.com/sev/xolonium) fonts.
+A more complete example can be found in the source files of
+the [Oxanium font family](https://github.com/sevmeyer/oxanium).
 
-First, the cvt table is populated with a few values,
-and some useful flag aliases are defined as well:
-
-```
-cvt
-{
-   80 side
-  160 stem
-  120 bar
-  700 cap
-}
-
-flags
-{
-  x    1
-  y    0
-  r    1
-  rp2  0
-  side 01110
-  stem 01101
-  body 10100
-}
-```
-
-Now consider these outlines:
+Consider these outlines for the glyph named "H":
 
 ```
  1--2  5--6
@@ -40,32 +16,51 @@ Now consider these outlines:
  0-11  8--7
 ```
 
-The code on the left shows an exemplary instruction of the outlines.
-It is then compiled into the TrueType program on the right.
-Note that the compiler collects all arguments, maps them to the
-correct indices, and pushes them in a single call:
+The following plain-text source populates the Control Value Table,
+defines some useful flag aliases, and instructs the outlines vertically:
 
 ```
-H                    | NPUSHB
-{                    |  21
-  MIAP[r]     0 side |  10 2 4 4 0 2 6 3 8 0
-  MIRP[stem]  2 stem |  13 0 4 8 1 6 10 2 1 0 0
-  SHP[rp2]   10      | MIAP[1]
-  MDRP[body]  6      | MIRP[1101]
-  MIRP[stem]  8 stem | SHP[0]
-  SHP[rp2]    4      | MDRP[10100]
-  MIRP[side] 13 side | MIRP[1101]
-  IUP[x]             | SHP[0]
-                     | MIRP[1110]
-  SVTCA[y]           | IUP[1]
-  MDAP[r]     0      | SVTCA[0]
-  ALIGNRP     8      | MDAP[1]
-  MIAP[r]     6 cap  | ALIGNRP
-  ALIGNRP     2      | MIAP[1]
-  SRP2        0      | ALIGNRP
-  IP          4      | SRP2
-  MDAP[r]     4      | IP
-  MIRP[stem] 10 bar  | MDAP[1]
-  IUP[y]             | MIRP[1101]
-}                    | IUP[0]
+cvt {
+    0 base
+  700 cap
+}
+
+flags {
+  y    0
+  r    1
+  rp1  1
+  stem 01001
+}
+
+H {
+  SVTCA[y]
+  MIAP[r]     0 base
+  SHP[rp1]    8
+  MIAP[r]     6 cap
+  SHP[rp1]    2
+  SRP2        0
+  IP         10
+  MDAP[r]    10
+  MDRP[stem]  4
+  IUP[y]
+}
+
+```
+
+This is then compiled into the following TrueType glyph program.
+Note that the compiler collects all arguments, maps them to the
+correct table indices, and pushes them in a single call:
+
+```
+NPUSHB 10 4 10 10 0 2 6 1 8 0 0
+SVTCA[0]
+MIAP[1]
+SHP[1]
+MIAP[1]
+SHP[1]
+SRP2
+IP
+MDAP[1]
+MDRP[01001]
+IUP[0]
 ```
