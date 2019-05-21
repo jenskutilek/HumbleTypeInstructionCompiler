@@ -98,7 +98,6 @@ def toFontTools(sourceFile, font):
 			gasp.gaspRange[size] = flags
 		gasp.version = 1
 		font["gasp"] = gasp
-		font["gasp"].compile(font)
 
 	for name, value in data.maxp.items():
 		if name == "maxStackElements" : font["maxp"].maxStackElements = value
