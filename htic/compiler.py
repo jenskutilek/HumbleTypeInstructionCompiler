@@ -112,12 +112,14 @@ def toFontTools(sourceFile, font):
 		cvt.values = array.array("h", data.cvt)
 
 	if data.fpgm:
-		fpgm = ttLib.newTable("fpgm")
-		font["fpgm"].program.fromBytecode(translator.translate(data.fpgm))
+		font["fpgm"] = fpgm = ttLib.newTable("fpgm")
+		fpgm.program = ttLib.tables.ttProgram.Program()
+		fpgm.program.fromBytecode(translator.translate(data.fpgm))
 
 	if data.prep:
-		fpgm = ttLib.newTable("prep")
-		font["prep"].program.fromBytecode(translator.translate(data.prep))
+		font["prep"] = prep = ttLib.newTable("prep")
+		prep.program = ttLib.tables.ttProgram.Program()
+		prep.program.fromBytecode(translator.translate(data.prep))
 
 	for name, block in data.glyphs.items():
 		try:
