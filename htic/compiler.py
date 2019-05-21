@@ -81,6 +81,7 @@ def toFontforge(sourceFile, font):
 
 
 def toFontTools(sourceFile, font):
+	import array
 	from fontTools import ttLib
 	from fontTools.ttLib.tables._g_a_s_p import GASP_SYMMETRIC_GRIDFIT, GASP_SYMMETRIC_SMOOTHING, GASP_DOGRAY, GASP_GRIDFIT
 	data = parseFile(sourceFile)
@@ -107,9 +108,8 @@ def toFontTools(sourceFile, font):
 		if name == "maxTwilightPoints": font["maxp"].maxTwilightPoints = value
 
 	if data.cvt:
-		cvt = ttLib.newTable("cvt ")
-		cvt.values = data.cvt
-		font["cvt "] = cvt
+		font["cvt "] = cvt = ttLib.newTable("cvt ")
+		cvt.values = array.array("h", data.cvt)
 
 	if data.fpgm:
 		fpgm = ttLib.newTable("fpgm")
