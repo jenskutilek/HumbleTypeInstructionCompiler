@@ -123,7 +123,9 @@ def toFontTools(sourceFile, font):
 
 	for name, block in data.glyphs.items():
 		try:
-			font["glyf"][str(name)].program.fromBytecode(translator.translate(block))
+			glyph = font["glyf"][str(name)]
+			glyph.program = ttLib.tables.ttProgram.Program()
+			glyph.program.fromBytecode(translator.translate(block))
 		except Exception:
 			print("Error with glyph: " + name)
 			raise
